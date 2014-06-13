@@ -1,0 +1,33 @@
+INSTRUCTIONS:
+
+The following meters are currently supported, the name in brackets
+can be supplied to tools using the -m command line option.  The order
+they are printed below reflects the level of support.
+
+1.  Double Educational Devices [wattsup]
+2.  Radio Shack 22-812 [rs22812]
+3.  Fluke 189 [fluke189]
+4.  Protek 506 [protek506]
+
+For general configuration instructions, see the INSTALL file located
+in this directory.  An overview of the system and more complete
+instructions are provided in the manual, located in the doc subdirectory.
+The latest news for a particular version can be found in the ChangeLog.
+
+--------------------------------------------------------------------------
+LICENSE:
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+For a copy of the GNU Library General Public License
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  or go to http://www.gnu.org
+

@@ -1,0 +1,21 @@
+\section{Compilation}
+Compilation for this software is handled by the GNU configure system.
+For maintainers, the complete system can be rebuilt using the autogen.sh
+shell script.  Modifications, of course, should be made to the
+configure.ac and Makefile.am files located throughout the project
+directories.
+
+If you are unfamiliar with GNU configure, see the INSTALL file for
+general configuration instructions.  In addition, the following additions
+should be considered along with the base options.
+
+\begin{table}[h]
+\begin{tabular}{l p{12cm}}
+--with-tcp-port=PORT &
+Set the default TCP port for network connections in the \emph{mlogger}
+and \emph{mclient} tools.  This can also be changed on startup with these
+tools.\\
+
+\end{tabular}
+\end{table}
+

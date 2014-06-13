@@ -1,0 +1,155 @@
+/*
+ *   This program is free software; you can redistribute it and/or
+ *   modify it under the terms of the GNU Library General Public License as
+ *   published by the Free Software Foundation; either version 2 of the
+ *   License, or (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *   Library General Public License for more details.
+ *
+ *   For a copy of the GNU Library General Public License
+ *   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ *   Boston, MA 02111-1307, USA.  or go to http://www.gnu.org
+ *
+ * $Id: mclient.c,v 1.1.1.1 2007/02/07 15:07:23 fengx Exp $
+ */
+
+/*
+ * This is the network meter client.  Using this client and an appropriate
+ * server running mlogger, the client will communicate to the server and
+ * return the appropriate values.  Numerous options exist on the formatting
+ * of the output and other connection related options.
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <libgen.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
+#include <signal.h>
+#ifdef HAVE_CONFIG_H
+#   include "config.h"
+#endif
+#include <meter.h>
+
+#define DEFAULT_CMD		NETMETER_CMD_ENERGY
+#define DEFAULT_COUNT		1
+#define DEFAULT_DELAY		1000
+#define DEFAULT_ACCURACY	0
+#define DEFAULT_METER_PORT	6999
+
+extern char *optarg;
+extern int optind, opterr, optopt;
+
+#define	MAX_MSG_SIZE	62
+#define	NEW_LOG_FILE	20
+#define	NEW_SESSION	21
+#define	END_LOG_FILE	22
+#define END_SESSION	23
+#define CHG_WORKING_DIR	24
+
+typedef struct control_msg
+{
+	char	cmd;
+	char	len;
+	char	msg[MAX_MSG_SIZE];
+}control_msg_t;
+static control_msg_t g_msg;
+
+int	send_control_msg(char *hostname, unsigned short port, control_msg_t *msg);
+void show_usage(char *argv[]);
+
+int main(int argc, char *argv[]) {
+   char *hostname = METER_HOST;       /* hostname to connect to */
+   unsigned short port = DEFAULT_METER_PORT;  /* tcp port number */
+   int c, len;
+
+   opterr = 0;
+   while ((c = getopt(argc, argv, "H:p:l:s:e:d:h")) != -1) {
+      switch (c) {
+	 case 'H':
+		hostname = strdup( optarg );
+		break;
+	 case 'p':
+		port = (unsigned short)atoi( optarg );
+		break;
+         case 'l':
+   		g_msg.cmd = NEW_LOG_FILE;
+		len = strlen( optarg );
+		if ( len >= MAX_MSG_SIZE ){
+			len = MAX_MSG_SIZE-1;
+			optarg[len] = '\0';
+		}
+   		sprintf(g_msg.msg, optarg);
+   		g_msg.len = strlen( g_msg.msg );
+   		send_control_msg( hostname, port, &g_msg);
+            break;
+         case 's':
+   		g_msg.cmd = NEW_SESSION;
+		len = strlen( optarg );
+		if ( len >= MAX_MSG_SIZE ){
+			len = MAX_MSG_SIZE-1;
+			optarg[len] = '\0';
+		}
+   		sprintf(g_msg.msg, optarg);
+   		g_msg.len = strlen( g_msg.msg );
+   		send_control_msg( hostname, port, &g_msg);
+            break;
+         case 'e':
+	 	if ( optarg[0] == 'l') 
+			g_msg.cmd = END_LOG_FILE;
+		else if (  optarg[0] == 's')
+			g_msg.cmd = END_SESSION;
+		else
+			break;
+   		sprintf(g_msg.msg, optarg);
+   		g_msg.len = strlen( g_msg.msg );
+   		send_control_msg( hostname, port, &g_msg);
+            break;
+	 case 'd':
+		g_msg.cmd = CHG_WORKING_DIR;
+		len = strlen( optarg );
+		if ( len >= MAX_MSG_SIZE ){
+			len = MAX_MSG_SIZE-1;
+			optarg[len] = '\0';
+		}
+   		sprintf(g_msg.msg, optarg);
+   		g_msg.len = strlen( g_msg.msg );
+   		send_control_msg( hostname, port, &g_msg);
+		break;
+     case 'h':
+           show_usage(argv);
+           exit(0);
+     default:
+          fprintf(stderr, "unknown option: '%c'\n", optopt);
+          exit(1);
+      }
+   }
+   return 0;
+}
+
+void show_usage(char *argv[]) {
+   char *name = basename(argv[0]);
+   printf("Usage: %s [-H host] [-p port] -l <log_file_name>  #start a new log file\n", name);
+   printf("       %s [-H host] [-p port] -s <session_label>  #start a new session\n", name);
+   printf("       %s [-H host] [-p port] -e log              #close current log\n", name);
+   printf("       %s [-H host] [-p port] -e session          #close current session\n", name);
+   printf("       %s [-H host] [-p port] -d directory        #change output directory\n");
+   printf("       %%s -h                                     #show usage\n", name);
+}
+
+int send_control_msg(char *hostname, unsigned short port, control_msg_t *msg)
+{
+	int sock, nb;
+	if ( (sock=netmeter_connect(hostname, port)) == -1)
+		return -1;
+    	nb = write(sock, (void *)msg, sizeof(control_msg_t)); 
+	fprintf(stderr, "request to send %d bytes; send out %d bytes\n", sizeof(control_msg_t), nb);
+	usleep(1);
+	netmeter_close(sock);
+	return 0;
+}

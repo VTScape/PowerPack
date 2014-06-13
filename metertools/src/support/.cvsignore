@@ -1,0 +1,8 @@
+.deps
+.libs
+Makefile
+connectsock.lo
+libsupport.la
+passivesock.lo
+stringbuffer.lo
+util.lo

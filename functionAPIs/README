@@ -1,0 +1,81 @@
+Installation:
+  
+  1. If the directory of generated file needs to be changed, open the 
+    file "fcontrol.c" to modify:
+    a. "optarg" in the function powerpack_fp_init(char *logfile) at line: 32
+    b. directory part at line: 78 
+
+    This function level API is written by and will be use with C by default.
+    If function level API is supposed to called by Fortran, then you should 
+    modify the same variables but in the function with the C function 
+    name followed by "_".
+
+  2. If the meter server is changed, the right IP address should be specified 
+    to "METER_SERVER" in fcontrol.h file.
+
+  3. % make 
+    After make, we have three library files (.a) in the folder. Copy them 
+    to where the your code should be compiled and link them when compiling.
+    Also, do not forget to put fcontrol.h meter.h netmeter.h together with
+    the code you are compiling.
+    For example:
+    If you want to compile hello.c, you should run:
+      gcc -c hello.c
+      gcc -o hello hello.c fcontrol.a libmeter.a libsupport.a 
+
+Function-Level Power Profiling API:
+  1. Initialization of power profiling
+    powerpack_fp_init(<data file name>)
+  
+  2. End of power profiling
+    powerpack_fp_end()
+  
+  3. Start profiling of function foo
+    powerpack_fp_session_start("foo")
+
+  4. End of profiling of function foo
+    powerpack_fp_session_end("foo")
+
+
+FAQ:
+  
+  1. What if we get error "Permission Denied" at the end our program?
+    
+    You probably did not set up public key between your machine (n324) and 
+    remote machine (192.168.254.109). You can either copy and run the scp 
+    command on screen or setup public key.
+
+  2. What if we got wrong session name for the functions?
+
+    That usually happens when you call the API in Fortran. You should 
+    create a char * as the argument of the interfaces requiring string 
+    argument. You should not just pass in a string directly to the 
+    interfaces.
+    For example:
+    
+    Wrong way:
+      powerpack_fp_init("ft")
+    
+    Right way:
+      character*2 cc
+      powerpack_fp_init(cc);
+
+  3. Mixing with C++:
+    In the header file of C++ main, adding:
+      extern "C" {
+        #include "fcontrol.h"
+      }
+
+    The warning "deprecated conversion from string constant to ‘char*’" 
+    can be ignored at this time.
+
+  4. What if we get error "connection refused" when running the program?
+
+    In most cases it is because the meter server daemon service is down. 
+    Please notify the admin to restart the service.
+
+
+Version:
+  4.0.0: Support C and Fortran.
+  4.0.1: Support C, C++, and Fortran.
+  4.0.2: Define meter server IP address in header file (fcontrol.h).

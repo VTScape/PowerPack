@@ -1,0 +1,45 @@
+\section{Agent Interface}
+
+There are a number of interfaces that are usable by client applications
+to interface directly with the policy agents.  Both remote and local
+requests are handled similarily, through the agent connection and query
+interfaces as documented below.  Within the same agent connection,
+multiple requests are possible prior to issuing a disconnect.  Thus,
+state information regarding the connection is persistent and resources
+are not freed until the connection is explicitly closed.
+
+\begin{table}[h]
+\begin{tabular}{|l|p{4cm}|p{8cm}|}
+\hline
+Function & Arguments & Description \\
+\hline
+agent\_connect &
+char *agenthost,
+unsigned short port,
+int options &
+This function connects to both the local policy agent or across the
+network to a global policy agent as applicable.  For remote connections,
+the hostname must be specified.  If the port is provided, it will override
+the compiled in default.  The options for the connection are for future
+enhancements to specify additional negotiation capabilities for requests
+(i.e., encryption). \\
+
+\hline 
+agent\_disconnect &
+none &
+This is the inverse to the connect function.  Every connect should be
+appropriately followed by a disconnect.  If a disconnect does not occur,
+resources are freed automatically based on program termination.  Resources
+are freed earlier if explictly called. \\
+
+\hline
+set\_device\_pstate &
+int dev,
+int current\_state &
+Transition the indicated device to the provided state. In order to transition
+the device, the state information must already be known \\
+
+\hline
+\end{tabular}
+\end{table}
+

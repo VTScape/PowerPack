@@ -1,0 +1,23 @@
+/.cvsignore/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/ChangeLog/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/INSTALL/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/Makefile.am/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/Makefile.in/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/README/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/TODO/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/aclocal.m4/1.1.1.1/Wed Feb  7 15:07:23 2007//
+/autogen.sh/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/config.guess/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/config.h.in/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/config.sub/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/configure/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/configure.ac/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/cvs.cmd/1.1.1.1/Wed Feb  7 15:07:23 2007//
+/depcomp/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/install-sh/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/libtool/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/ltmain.sh/1.1.1.1/Wed Feb  7 15:07:22 2007//
+/missing/1.1.1.1/Wed Feb  7 15:07:22 2007//
+D/docs////
+D/m4////
+D/src////

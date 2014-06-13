@@ -1,0 +1,145 @@
+.\"  -*- nroff -*-
+.\" $Id: mlogger.1,v 1.1.1.1 2007/02/07 15:07:23 fengx Exp $
+
+.TH mlogger 1 "April 2005" "Meter Tools"
+
+.SH NAME
+mlogger \- Meter Logger
+
+.SH SYNOPSIS
+.na
+.B mlogger
+[\c
+.B \-l
+.I log
+]
+[\c
+.B \-c
+.I count
+]
+[\c
+.B \-v
+.I volts
+]
+[\c
+.B \-s
+.I serialport
+]
+[\c
+.B \-p
+.I port
+]
+[\c
+.B \-t
+.I timeout
+]
+[\c
+.B \-m
+.I [wattsup|rs22812|fluke189|protek506]
+]
+[\c
+.B \-o
+]
+[\c
+.B \-d
+]
+[\c
+.B \-h
+]
+
+.ad
+.SH DESCRIPTION 
+.LP
+The meter logger provides a simple tool to continuously read data from a
+serial port from a supported hardware meter.  The meter can be changed from
+the command line with the \-m option.  Upon startup, this program will
+wait on the given network port for client connections.  All default values
+are printed with the \-h option.
+
+.SH OPTIONS
+.TP
+.B \-l
+.I log
+.br
+Specifies a file for the output.  If this file already exists, new output
+will be appended to it.
+
+.TP
+.B \-c
+.I count
+.br
+Reads the attached meter the given count number of times.  After the given
+count readings are read the program will exit.
+
+.TP
+.B \-v
+.I volts
+.br
+Simulate volts for a power reading on meters with no direct capability
+to read watts.
+
+.TP
+.B \-s
+.I serialport
+.br
+Read from the given serial port.
+
+.TP
+.B \-p
+.I port
+.br
+To allow client connections using the
+.B mclient
+tool, startup a network listener on the given port.
+
+.TP
+.B \-t
+.I timeout
+.br
+Specify a timeout while trying to read from the meter.  If the timeout
+expires, another query to read the meter is send and the program will
+again wait for the specified timeout.
+
+.TP
+.B \-m
+.I [wattsup|rs22812|fluke189|protek506]
+.br
+Read from the given meter type.  The Fluke 189 meter option also supports the
+187 model.
+
+.TP
+.B \-o
+Output the value(s) read to the console.  Most meters only provide the
+display value per meter read.  For those that provide multiple values,
+all values will be printed.
+
+.TP
+.B \-d
+Enable debugging.
+
+.TP
+.B \-h
+Displays help and then exits.
+ 
+.SH EXIT VALUE
+.LP
+.ne 3
+.PD 0
+.TP
+.B 0
+Operation was successful.
+.ne 3
+.TP
+.B -1
+Program error, note any messages on stderr.
+.PD
+
+.SH AUTHORS
+.LP
+
+Mark E. Femal <mfemal@gmail.com>
+
+.SH SEE ALSO
+.BR mclient (1),
+.BR msend (1)
+

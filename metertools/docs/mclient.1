@@ -1,0 +1,157 @@
+.\"  -*- nroff -*-
+.\" $Id: mclient.1,v 1.1.1.1 2007/02/07 15:07:23 fengx Exp $
+
+.TH mclient 1 "April 2005" "Meter Tools"
+
+.SH NAME
+mclient \- Meter Client
+
+.SH SYNOPSIS
+.na
+.B mclient
+[\c
+.B \-H
+.I host
+]
+[\c
+.B \-p
+.I port
+]
+[\c
+.B \-A
+.I digits
+]
+[\c
+.B \-T
+]
+[\c
+.B \-g
+]
+[\c
+.B \-w
+]
+[\c
+.B \-j
+]
+[\c
+.B \-c
+.I count
+]
+[\c
+.B \-d
+.I delay
+]
+[\c
+.B \-B
+]
+[\c
+.B \-U
+]
+[\c
+.B \-v
+]
+[\c
+.B \-h
+]
+
+.ad
+.SH DESCRIPTION 
+.LP
+The meter client is a tool designed to query the meter logger on a network.
+The port number supplied to the client must be the same as the one on the
+server.  All default values are printed with the \-h option.
+
+.SH OPTIONS
+.TP
+.B \-H
+.I host
+.br
+Specify the TCP\/IP host name to connect to.  Ensure an
+.B mlogger
+is run on this host listening on the provided port number.
+
+.TP
+.B \-p
+.I port
+.br
+Provide the port number for the server.  The client and server must use
+the same port.
+
+.TP
+.B \-A
+.I digits
+.br
+The accuracy for measurements depends on the display value for the meter.
+To print the reading to a specific accuracy, specify the number of significant
+digits with this option.
+
+.TP
+.B \-T
+The default behavior is to print the display value and units.  To print a
+leading timestamp specify this switch.
+
+.TP
+.B \-g
+To retrieve the current display value, specify this option.
+
+.TP
+.B \-w
+To query the current power value, specify this option.
+
+.TP
+.B \-j
+To print the number of joules, use this option.  The joules count begins when
+the meter logger first starts.  To obtain the change in joules subtract the
+previous value from the current value.
+
+.TP
+.B \-c
+.I count
+.br
+Read count values from the meter.  After the given count readings are read
+the program will exit.
+
+.TP
+.B \-d
+.I delay
+.br
+Specify a delay between successive readings when using the \-c option.
+
+.TP
+.B \-B
+Convert to the base units rather than display units.
+
+.TP
+.B \-U
+Don't print the units with the value.
+
+.TP
+.B \-v
+Enable verbose output.
+
+.TP
+.B \-h
+Displays help and then exits.
+ 
+.SH EXIT VALUE
+.LP
+.ne 3
+.PD 0
+.TP
+.B 0
+Operation was successful.
+.ne 3
+.TP
+.B -1
+Program error, note any messages on stderr.
+.PD
+
+.SH AUTHORS
+.LP
+
+Mark E. Femal <mfemal@gmail.com>
+
+.SH SEE ALSO
+.BR mlogger (1),
+.BR msend (1)
+

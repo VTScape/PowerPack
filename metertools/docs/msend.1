@@ -1,0 +1,79 @@
+.\"  -*- nroff -*-
+.\" $Id: msend.1,v 1.1.1.1 2007/02/07 15:07:23 fengx Exp $
+
+.TH msend 1 "April 2005" "Meter Tools"
+
+.SH NAME
+msend \- Meter Command Sender
+
+.SH SYNOPSIS
+.na
+.B msend
+[\c
+.B \-s
+.I serialport
+]
+[\c
+.B \-m
+.I [wattsup|rs22812|fluke189|protek506]
+]
+[\c
+.B \-d
+]
+[\c
+.B \-h
+]
+
+.ad
+.SH DESCRIPTION 
+.LP
+The meter command sender is a tool to send and receive responses to
+a supported meter.  This is primarily a low-level communicative utility
+that is dependent on the exact meter that is being used.  See the
+communication protocol for your meter for possible options.  All default
+values are printed using the \-h option.
+
+.SH OPTIONS
+.TP
+.B \-s
+.I serialport
+.br
+Read from the given serial port.
+
+.TP
+.B \-m
+.I [wattsup|rs22812|fluke189|protek506]
+.br
+Read from the given meter type.  The Fluke 189 meter option also supports the
+187 model.
+
+.TP
+.B \-d
+Enable debugging.
+
+.TP
+.B \-h
+Displays help and then exits.
+ 
+.SH EXIT VALUE
+.LP
+.ne 3
+.PD 0
+.TP
+.B 0
+Operation was successful.
+.ne 3
+.TP
+.B -1
+Program error, note any messages on stderr.
+.PD
+
+.SH AUTHORS
+.LP
+
+Mark E. Femal <mfemal@gmail.com>
+
+.SH SEE ALSO
+.BR mclient (1),
+.BR mlogger (1)
+
