@@ -1,0 +1,75 @@
+NI server -- binary that runs on Windows
+
+If we want to want run another GPU, we have to copy paste the binary, 
+change the config, and that'll act as another binary.
+
+
+Dory cluster
+-have to connect to dory before connecting to linux box or windows
+
+linux -- ssh n240 
+
+172.16.0.240 linux box ip
+
+metertools_4.0_n11_s240_20130409/src/tool/mcontrol
+src/tools/mcontrol -- where all th server daemons are places
+
+mserver and multiserver
+	1)start mserver
+	before starting mserver
+		sudo nohup ./mserver -s /dev/ttyUSB0 -o -p 6911 &
+
+	-s <usbportname>
+	-o -p <port number assigned to service>
+
+	Port naming convention
+			69 - port
+			11 - node number
+	windows and linux box will talk over that port
+	usbportname will be the port used to connect to the meter. There can be multiple usbports on a node
+
+	2)starting multiserver
+	./multiserver &
+
+	power pac is running for the GPU machine!!!!!!
+
+fcontrol.h
+
+
+
+results
+	col 1 cpu
+	col 2 memory
+	col 3 user disc or motherboard(?) 
+	col 4 user disc or motherboard(?)
+
+	every line is 1 timestamp
+
+	<COL1> <COL2> <COL3> <COL4> || <POWER MEASUREMENTS OF EACH RAIL>
+	power measurements are aggregated into the first four columns.
+	We can change the aggregation, but we need to recompile afterwards
+
+
+
+have to use the multimeter to measure what each rail is assigned to
+--run a benchmark targeting a specific rail and see which one is poppin' off
+
+
+|wserver|
+project folder
+
+ContAcq-IntClk.c
+--once hardware is done we have to record the voltage information into this file
+
+
+vim multiserver.c
+#define DEFAULT_METER_PORT <-- will have to change when setting up a new machine
+
+
+
+P.S.
+sometimes for the gpu machine, we can't map the rail to a single component
+e.g. you see the same rail powering up on different benchmarks
+
+
+needs PCIe riser cards
