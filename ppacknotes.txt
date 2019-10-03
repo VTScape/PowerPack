@@ -3,30 +3,38 @@ NI server -- binary that runs on Windows
 If we want to want run another GPU, we have to copy paste the binary, 
 change the config, and that'll act as another binary.
 
+You have to connect your machine to the DORI cluster **before** connection ot the linux box or Windows.
 
-Dory cluster
--have to connect to dory before connecting to linux box or windows
 
-linux -- ssh n240 
 
-172.16.0.240 linux box ip
+Connect to the linux box (ip: 172.16.0.240)
+Linux:
+```
+ssh n240 
+```
+
 
 metertools_4.0_n11_s240_20130409/src/tool/mcontrol
-src/tools/mcontrol -- where all th server daemons are places
 
-mserver and multiserver
-	1)start mserver
-	before starting mserver
-		sudo nohup ./mserver -s /dev/ttyUSB0 -o -p 6911 &
+All the server daemons are in `metertools/src/tools/mcontrol`
 
-	-s <usbportname>
-	-o -p <port number assigned to service>
 
-	Port naming convention
-			69 - port
-			11 - node number
-	windows and linux box will talk over that port
-	usbportname will be the port used to connect to the meter. There can be multiple usbports on a node
+## mserver and multiserver
+---
+1. Start mserver
+
+before starting mserver run `sudo nohup ./mserver -s /dev/ttyUSB0 -o -p 6911 &` on the linux box.
+
+	-s <usbportname> (Port that the meter is connected to e.g. /dev/ttyUSB0)
+	-o Output the value read to standard out
+	-p <port number assigned to service>
+
+>Port naming convention
+>			69 - port
+>			11 - node number
+
+windows and linux box will talk over that port
+> There can be multiple usbports on a node
 
 	2)starting multiserver
 	./multiserver &
