@@ -244,7 +244,7 @@ int send_control_msg(char *hostname, unsigned short port, control_msg_t *msg)
   nb = write(sock, (void *)msg, sizeof(control_msg_t));
   fprintf(stderr, "request to send %lu bytes; send out %d bytes\n", sizeof(control_msg_t), nb);
   usleep(1);
-  netmeter_close();
+  netmeter_close(port);
   return 0;
 }
 

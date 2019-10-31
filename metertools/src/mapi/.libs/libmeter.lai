@@ -14,7 +14,7 @@ library_names='libmeter.so.1.0.0 libmeter.so.1 libmeter.so'
 old_library='libmeter.a'
 
 # Libraries that this one depends upon.
-dependency_libs=' -lpthread'
+dependency_libs=''
 
 # Version information for libmeter.
 current=1

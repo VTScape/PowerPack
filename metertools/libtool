@@ -44,7 +44,7 @@ available_tags=" CXX F77"
 
 # ### BEGIN LIBTOOL CONFIG
 
-# Libtool was configured on host n324:
+# Libtool was configured on host dori.cs.vt.edu:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -85,7 +85,7 @@ CC="gcc"
 with_gcc=yes
 
 # An ERE matcher.
-EGREP="grep -E"
+EGREP="/bin/grep -E"
 
 # The linker used to build libraries.
 LD="/usr/bin/ld -m elf_x86_64"
@@ -138,7 +138,7 @@ pic_flag=" -fPIC -DPIC"
 pic_mode=default
 
 # What is the maximum length of a command?
-max_cmd_len=32768
+max_cmd_len=
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o="yes"
@@ -6768,7 +6768,7 @@ build_old_libs=`case $build_libtool_libs in yes) $echo no;; *) $echo yes;; esac`
 # End:
 # ### BEGIN LIBTOOL TAG CONFIG: CXX
 
-# Libtool was configured on host n324:
+# Libtool was configured on host dori.cs.vt.edu:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -6809,7 +6809,7 @@ CC="g++"
 with_gcc=yes
 
 # An ERE matcher.
-EGREP="grep -E"
+EGREP="/bin/grep -E"
 
 # The linker used to build libraries.
 LD="/usr/bin/ld -m elf_x86_64"
@@ -6862,7 +6862,7 @@ pic_flag=" -fPIC -DPIC"
 pic_mode=default
 
 # What is the maximum length of a command?
-max_cmd_len=32768
+max_cmd_len=
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o="yes"
@@ -6941,11 +6941,11 @@ striplib="strip --strip-unneeded"
 
 # Dependencies to place before the objects being linked to create a
 # shared library.
-predep_objects="/usr/lib/gcc/x86_64-redhat-linux/4.3.2/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/4.3.2/crtbeginS.o"
+predep_objects="/usr/lib/../lib64/crti.o /usr/local/lib/gcc/x86_64-unknown-linux-gnu/5.3.0/crtbeginS.o"
 
 # Dependencies to place after the objects being linked to create a
 # shared library.
-postdep_objects="/usr/lib/gcc/x86_64-redhat-linux/4.3.2/crtendS.o /usr/lib/gcc/x86_64-redhat-linux/4.3.2/../../../../lib64/crtn.o"
+postdep_objects="/usr/local/lib/gcc/x86_64-unknown-linux-gnu/5.3.0/crtendS.o /usr/lib/../lib64/crtn.o"
 
 # Dependencies to place before the objects being linked to create a
 # shared library.
@@ -6957,7 +6957,7 @@ postdeps="-lstdc++ -lm -lgcc_s -lc -lgcc_s"
 
 # The library search path used internally by the compiler when linking
 # a shared library.
-compiler_lib_search_path="-L/usr/lib/gcc/x86_64-redhat-linux/4.3.2 -L/usr/lib/gcc/x86_64-redhat-linux/4.3.2 -L/usr/lib/gcc/x86_64-redhat-linux/4.3.2/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/4.3.2/../../.."
+compiler_lib_search_path="-L/usr/local/lib/gcc/x86_64-unknown-linux-gnu/5.3.0 -L/usr/local/lib/gcc/x86_64-unknown-linux-gnu/5.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/local/lib/gcc/x86_64-unknown-linux-gnu/5.3.0/../../.."
 
 # Method to check whether dependent libraries are shared objects.
 deplibs_check_method="pass_all"
@@ -7064,7 +7064,7 @@ include_expsyms=""
 
 # ### BEGIN LIBTOOL TAG CONFIG: F77
 
-# Libtool was configured on host n324:
+# Libtool was configured on host dori.cs.vt.edu:
 
 # Shell to use when invoking shell scripts.
 SHELL="/bin/sh"
@@ -7105,7 +7105,7 @@ CC="g77"
 with_gcc=yes
 
 # An ERE matcher.
-EGREP="grep -E"
+EGREP="/bin/grep -E"
 
 # The linker used to build libraries.
 LD="/usr/bin/ld -m elf_x86_64"
@@ -7158,7 +7158,7 @@ pic_flag=" -fPIC"
 pic_mode=default
 
 # What is the maximum length of a command?
-max_cmd_len=32768
+max_cmd_len=
 
 # Does compiler simultaneously support -c and -o options?
 compiler_c_o="yes"
