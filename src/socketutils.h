@@ -1,8 +1,10 @@
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iostream>
+#include <string>
 
 class socketServer {
  public:
@@ -22,7 +24,7 @@ class socketServer {
 
 class socketClient {
  public:
-  socketClient(int portNumber);
+  socketClient(int portNumber, std::string serverIP);
 
   ~socketClient();
 

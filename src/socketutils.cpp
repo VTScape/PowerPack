@@ -31,18 +31,18 @@ void socketServer::read(double size, void* buf) {}
 
 void socketServer::write(double size, void* buf) {}
 
-socketClient::socketClient(int portNumber) {
+socketClient::socketClient(int portNumber, std::string serverIP) {
   sock = 0;
 
   serverAddress.sin_family = AF_INET;
   serverAddress.sin_port = htons(portNumber);
 
-  if (sock = socket(serverAddress.sin_family, SOCK_STREAM, 0)) < 0) {
+  if (sock = socket(serverAddress.sin_family, SOCK_STREAM, 0) < 0) {
       std::cerr << "Client socket creation error\n";
       exit(EXIT_FAILURE);
     }
 
-  if (inet_pton(serverAddress.sin_family, "127.0.0.1",
+  if (inet_pton(serverAddress.sin_family, serverIP.c_str(),
                 &serverAddress.sin_addr)) {
     std::cerr << "Invalid address or address not supported\n";
     exit(EXIT_FAILURE);
