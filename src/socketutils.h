@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -31,5 +32,6 @@ class socketClient {
 
  private:
   // This is the file descriptor of the socket.
-  int fd;
+  int sock;
+  sockaddr_in serverAddress;
 };
