@@ -11,9 +11,11 @@ LIBFLAGS = -l$(LIBS)
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu
 endif
 
-TARGET = nimeasure
+TARGET = helloworld
 
 OBJS = $(TARGET).o
+
+DEPS = nimeasure.o
 
 LIBFLAGS += -lm
 
@@ -39,11 +41,13 @@ all: $(TARGET)
 build: $(TARGET) clean_obs
 
 clean:
-	rm -f $(OBJS) $(TARGET) core
+	rm -f *.o $(TARGET) core
 
 clean_obs:
-	rm -f $(OBJS) core 
+	rm -f *.o core 
 
-$(TARGET) : $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBFLAGS)
-	
+$(TARGET) : $(OBJS) nimeasure
+	$(CXX) $(LDFLAGS) $(DEPS) -o $@ $(OBJS) $(LIBFLAGS)
+
+nimeasure: nimeasure.o
+	$(CXX) -c $@.o $(LIBFLAGS)
