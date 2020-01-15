@@ -12,13 +12,13 @@ class socketServer {
 
   ~socketServer();
 
-  void read(double size, void* buf);
+  void read(void* buf, size_t size);
 
-  void write(double size, void* buf);
+  void write(void* buf, size_t size);
 
  private:
   // This is the file descriptor of the socket.
-  int fd;
+  int sock;
   sockaddr_in address;
 };
 
@@ -28,9 +28,9 @@ class socketClient {
 
   ~socketClient();
 
-  void read(double size, void* buf);
+  void read(void* buf, size_t size);
 
-  void write(double size, void* buf);
+  void write(void* buf, size_t size);
 
  private:
   // This is the file descriptor of the socket.
