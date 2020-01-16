@@ -41,6 +41,18 @@ void socketServer::write(void *buf, size_t size) {
   }
 }
 
+void socketServer::listenForClient() {
+  socklen_t clientLength;
+  int readSocket;
+  while (listen(sock, 1) != -1) {
+    clientLength = sizeof(address);
+    readSocket = accept(sock, (sockaddr *)&address, &clientLength);
+    if (handleClientConnection == -1) {
+      break;
+    }
+  }
+}
+
 socketClient::socketClient(int portNumber, std::string serverIP) {
   sock = 0;
 

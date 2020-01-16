@@ -18,6 +18,8 @@ class socketServer {
 
   void listenForClient();
 
+  int handleClientConnection(int readSocket);
+
  private:
   // This is the file descriptor of the socket.
   int sock;
