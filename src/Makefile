@@ -49,8 +49,15 @@ clean_obs:
 $(TARGET) : $(OBJS) nimeasure
 	$(CXX) $(LDFLAGS) $(DEPS) -o $@ $(OBJS)
 
-nimeasure: nimeasure.o
-	$(CXX) -c $@.o
+tsocks: testsockets socketutils
+	$(CXX) -Wall -std=c++11 -pthread testsockets.o socketutils.o -o $@
+
+socketutils: socketutils.o
+	$(CXX) -c $@.cpp
 
 testsockets: testsockets.o
-	$(CXX) -c -std=c++0x -pthread $@.o 
+	$(CXX) -c testsockets.cpp
+
+nimeasure: nimeasure.o
+	$(CXX) -c $@.cpp
+

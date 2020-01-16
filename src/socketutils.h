@@ -49,4 +49,4 @@ class socketClient {
   sockaddr_in serverAddress;
 };
 
-void printError(char* errorMsg);
+void printError(std::string errorMsg);
