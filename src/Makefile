@@ -61,3 +61,5 @@ testsockets: testsockets.o
 nimeasure: nimeasure.o
 	$(CXX) -c $@.cpp
 
+timeutils: timeutils.o
+	$(CXX) -c $@.cpp
