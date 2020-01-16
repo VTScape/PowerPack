@@ -17,7 +17,7 @@ socketServer::socketServer(int portNumber) {
     exit(EXIT_FAILURE);
   }
 
-  if (bind(sock, (sockaddr *)&address, sizeof(address)) < 0){
+  if (bind(sock, (sockaddr *)&address, sizeof(address)) < 0) {
     std::cerr << "Server failed to bind to socket\n";
     exit(EXIT_FAILURE);
   }
@@ -25,7 +25,7 @@ socketServer::socketServer(int portNumber) {
 
 socketServer::~socketServer() { close(sock); }
 
-void socketServer::read(void *buf, size_t size) {}
+void socketServer::readData(void *buf, size_t size) {}
 
 void socketServer::write(void *buf, size_t size) {}
 
@@ -54,8 +54,8 @@ socketClient::socketClient(int portNumber, std::string serverIP) {
 
 socketClient::~socketClient() { close(sock); }
 
-void socketClient::read(void *buf, size_t size) {
-  if (read(sock, buf, size) == -1){
+void socketClient::readData(void *buf, size_t size) {
+  if (read(sock, buf, size) == -1) {
     std::cerr << "Client failed to completely read from socket\n";
     exit(EXIT_FAILURE);
   }

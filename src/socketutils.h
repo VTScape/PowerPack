@@ -12,7 +12,7 @@ class socketServer {
 
   ~socketServer();
 
-  void read(void* buf, size_t size);
+  void readData(void* buf, size_t size);
 
   void write(void* buf, size_t size);
 
@@ -28,7 +28,7 @@ class socketClient {
 
   ~socketClient();
 
-  void read(void* buf, size_t size);
+  void readData(void* buf, size_t size);
 
   void write(void* buf, size_t size);
 
