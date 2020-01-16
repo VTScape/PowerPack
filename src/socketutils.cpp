@@ -1,5 +1,10 @@
 #include "socketutils.h"
 
+void printError(char* errorMsg){
+  std::cerr << errorMsg << std::strerror(errno) << "\n";
+  exit(EXIT_FAILURE);
+}
+
 socketServer::socketServer(int portNumber) {
   address.sin_family = AF_INET;
   address.sin_addr.s_addr = INADDR_ANY;
@@ -7,8 +12,7 @@ socketServer::socketServer(int portNumber) {
   int opt = 1;
 
   if ((sock = socket(address.sin_family, SOCK_STREAM, 0)) == 0) {
-    std::cerr << "Server failed to initialize socket\n";
-    exit(EXIT_FAILURE);
+    printError("Server failed to initialize socket\n");
   }
 
   if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt,

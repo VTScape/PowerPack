@@ -47,7 +47,10 @@ clean_obs:
 	rm -f *.o core 
 
 $(TARGET) : $(OBJS) nimeasure
-	$(CXX) $(LDFLAGS) $(DEPS) -o $@ $(OBJS) $(LIBFLAGS)
+	$(CXX) $(LDFLAGS) $(DEPS) -o $@ $(OBJS)
 
 nimeasure: nimeasure.o
-	$(CXX) -c $@.o $(LIBFLAGS)
+	$(CXX) -c $@.o
+
+testsockets: testsockets.o
+	$(CXX) -c -std=c++0x -pthread $@.o 

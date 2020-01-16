@@ -44,3 +44,5 @@ class socketClient {
   int sock;
   sockaddr_in serverAddress;
 };
+
+void printError(char* errorMsg);
