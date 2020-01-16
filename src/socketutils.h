@@ -3,6 +3,9 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <cerrno>
+#include <clocale>
+#include <cstring>
 #include <iostream>
 #include <string>
 
@@ -12,18 +15,18 @@ class socketServer {
 
   ~socketServer();
 
-  void readData(void* buf, size_t size);
-
-  void write(void* buf, size_t size);
-
   void listenForClient();
-
-  int handleClientConnection(int readSocket);
 
  private:
   // This is the file descriptor of the socket.
   int sock;
   sockaddr_in address;
+
+  void readData(int socketFD, void* buf, size_t size);
+
+  void write(int socketFD, void* buf, size_t size);
+
+  int handleClientConnection(int readSocket);
 };
 
 class socketClient {

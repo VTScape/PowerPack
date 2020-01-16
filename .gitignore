@@ -1,3 +1,4 @@
 **/c_cpp_properties.json
 *.o
 .vscode/
+*.out
