@@ -12,7 +12,9 @@ int main() {
   sleep(1);
   socketClient client(port, "127.0.0.1");
   client.sendSessionStart();
-  client.sendTag("tag");
+  client.sendTag("tag1");
+  client.sendTag("tag2");
+  client.sendTag("tag3");
   client.sendSessionEnd();
 
   serverThread.join();
