@@ -53,9 +53,11 @@ void socketServer::listenForClient() {
   while (listen(sock, 1) != -1) {
     clientLength = sizeof(address);
     readSocket = accept(sock, (sockaddr *)&address, &clientLength);
-    if (readSocket == -1) {
-      std::cerr << "Error, the accept failed with errno: "
-                << std::strerror(errno) << "\n";
+    if(readSocket == -1) {
+      std::cerr << "Error, the accept failed with errno: " << std::strerror(errno) << "\n";
+    }
+    if (handleClientConnection(readSocket) == -1) {
+      break;
     }
   }
 }

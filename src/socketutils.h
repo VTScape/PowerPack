@@ -18,12 +18,16 @@ class socketServer {
   void listenForClient();
 
  private:
+
   // This is the file descriptor of the socket.
   int sock;
+
   sockaddr_in address;
 
+  // This is a wrapper for socket read that stores the data in the given buffer.
   void readData(int socketFD, void* buf, size_t size);
 
+  // This is a wrapper for socket write that stores
   void write(int socketFD, void* buf, size_t size);
 
   int handleClientConnection(int readSocket);

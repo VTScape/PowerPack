@@ -15,5 +15,5 @@ int main() {
 
   client.write(buf, sizeof(int));
 
-  serverThread.join();
+
 }
