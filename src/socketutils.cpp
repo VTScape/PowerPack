@@ -59,11 +59,35 @@ void socketServer::listenForClient() {
 int socketServer::handleClientConnection(int readSocket) {
   std::cout << "The readsocket file descriptor is: " << readSocket << "\n";
 
-  int buffer[1];
-  readData(readSocket, buffer, sizeof(int));
+  int msgTypeBuffer[1];
+  readData(readSocket, msgTypeBuffer, sizeof(int));
 
-  std::cout << "The integer read was: " << *buffer << "\n";
+  if (msgTypeBuffer[0] == SESSION_START){
+    handleSessionStart();
+  }
+  else if (msgTypeBuffer[0] == SESSION_END){
+    handleSessionEnd();
+  }
+  else if (msgTypeBuffer[0] > 0){
+    handleTag(readSocket);
+  }
+  else{
+    printError("Server received unknown msg code");
+  }
+
   return 0;
+}
+
+void socketServer::handleSessionStart(){
+  //TODO
+}
+
+void socketServer::handleSessionEnd(){
+  //TODO
+} 
+
+void socketServer::handleTag(int socketFD){
+  //TODO
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {
@@ -99,4 +123,20 @@ void socketClient::write(void *buf, size_t size) {
   if ((bytesSent = send(sock, buf, size, 0)) < size) {
     printError("Client failed to completely send on socket. Client sent ");
   }
+}
+
+void socketClient::sendSessionStart() {
+  int startBuf[1] = {SESSION_START};
+  write(startBuf, sizeof(int));
+}
+
+void socketClient::sendSessionEnd(){
+  int endBuf[1] = {SESSION_END};
+  write(endBuf, sizeof(int));
+}
+
+void socketClient::sendTag(std::string tagName) {
+  int tagBuf[1] = {tagName.size()};
+  write(tagBuf, sizeof(int));
+  write((void *)tagName.c_str(), tagName.size() + 1);
 }

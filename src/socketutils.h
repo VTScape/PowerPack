@@ -9,6 +9,12 @@
 #include <iostream>
 #include <string>
 
+
+// CONTROL MESSAGE MACROS
+
+#define SESSION_START -2
+#define SESSION_END -1
+
 class socketServer {
  public:
   socketServer(int portNumber);
@@ -31,6 +37,10 @@ class socketServer {
   void write(int socketFD, void* buf, size_t size);
 
   int handleClientConnection(int readSocket);
+
+  void handleSessionStart();
+  void handleSessionEnd();
+  void handleTag(int socketFD);
 };
 
 class socketClient {
@@ -39,12 +49,17 @@ class socketClient {
 
   ~socketClient();
 
+  void sendSessionStart();
+  void sendSessionEnd();
+  void sendTag(std::string tagName);
+
+ private:
+  // This is the file descriptor of the socket.
+
   void readData(void* buf, size_t size);
 
   void write(void* buf, size_t size);
 
- private:
-  // This is the file descriptor of the socket.
   int sock;
   sockaddr_in serverAddress;
 };
