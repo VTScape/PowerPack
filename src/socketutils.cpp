@@ -25,9 +25,21 @@ socketServer::socketServer(int portNumber) {
 
 socketServer::~socketServer() { close(sock); }
 
-void socketServer::readData(void *buf, size_t size) {}
+void socketServer::readData(void *buf, size_t size) {
+  if (read(sock, buf, size) == -1) {
+    std::cerr << "Server failed to completely read from the socket\n";
+    exit(EXIT_FAILURE);
+  }
+}
 
-void socketServer::write(void *buf, size_t size) {}
+void socketServer::write(void *buf, size_t size) {
+  size_t bytesSent;
+  if((bytesSent = send(sock, buf, size, 0) < size){
+    std::cerr << "Server failed to completely send on socket. Server sent "
+              << bytesSent << " bytes instead of " << size << " bytes.\n";
+    exit(EXIT_FAILURE);
+  }
+}
 
 socketClient::socketClient(int portNumber, std::string serverIP) {
   sock = 0;
@@ -62,8 +74,10 @@ void socketClient::readData(void *buf, size_t size) {
 }
 
 void socketClient::write(void *buf, size_t size) {
+  size_t bytesSent;
   if((bytesSent = send(sock, buf, size, 0) < size){
-    std::cerr << "Client failed to completely send on socket\n";
+    std::cerr << "Client failed to completely send on socket. Client sent "
+              << bytesSent << " bytes instead of " << size << " bytes.\n";
     exit(EXIT_FAILURE);
   }
 }

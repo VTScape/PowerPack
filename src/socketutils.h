@@ -16,6 +16,8 @@ class socketServer {
 
   void write(void* buf, size_t size);
 
+  void listenForClient();
+
  private:
   // This is the file descriptor of the socket.
   int sock;
