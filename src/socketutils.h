@@ -40,7 +40,7 @@ class socketServer {
 
   void handleSessionStart();
   void handleSessionEnd();
-  void handleTag(int socketFD);
+  void handleTag(int socketFD, int size);
 };
 
 class socketClient {

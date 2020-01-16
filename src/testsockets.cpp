@@ -11,9 +11,9 @@ int main() {
   std::thread serverThread(setServerToListen, port);
   sleep(1);
   socketClient client(port, "127.0.0.1");
-  int buf[] = {17};
+  client.sendSessionStart();
+  client.sendTag("tag");
+  client.sendSessionEnd();
 
-  client.write(buf, sizeof(int));
-
-
+  serverThread.join();
 }

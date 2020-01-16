@@ -44,17 +44,19 @@ void socketServer::write(int socketFD, void *buf, size_t size) {
 void socketServer::listenForClient() {
   socklen_t clientLength;
   int readSocket;
-  while (listen(sock, 1) != -1) {
-    clientLength = sizeof(address);
-    readSocket = accept(sock, (sockaddr *)&address, &clientLength);
-    if (readSocket == -1) {
-      printError("Error, the accept failed with errno: ");
-    }
-    if (handleClientConnection(readSocket) == -1) {
-      break;
-    }
+
+  if (listen(sock, 1) == -1){
+    printError("Server failed to listen on socket");
   }
+
+  clientLength = sizeof(address);
+  if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1){
+    printError("Error, the accept failed with errno: ");
+  }
+
+  while(handleClientConnection(readSocket) != -1);
 }
+
 
 int socketServer::handleClientConnection(int readSocket) {
   std::cout << "The readsocket file descriptor is: " << readSocket << "\n";
@@ -67,9 +69,10 @@ int socketServer::handleClientConnection(int readSocket) {
   }
   else if (msgTypeBuffer[0] == SESSION_END){
     handleSessionEnd();
+    return -1;
   }
   else if (msgTypeBuffer[0] > 0){
-    handleTag(readSocket);
+    handleTag(readSocket, msgTypeBuffer[0]);
   }
   else{
     printError("Server received unknown msg code");
@@ -80,14 +83,21 @@ int socketServer::handleClientConnection(int readSocket) {
 
 void socketServer::handleSessionStart(){
   //TODO
+  std::cout << "session start\n";
 }
 
 void socketServer::handleSessionEnd(){
   //TODO
+  std::cout << "session end\n";
 } 
 
-void socketServer::handleTag(int socketFD){
+void socketServer::handleTag(int socketFD, int size){
   //TODO
+  std::cout << "session tag\n";
+  char *msgBuffer = new char[size];
+  readData(socketFD, msgBuffer, (size_t) size);
+  std::cout << "tag is: '" << msgBuffer << "'\n";
+  delete [] msgBuffer;
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {
@@ -136,7 +146,7 @@ void socketClient::sendSessionEnd(){
 }
 
 void socketClient::sendTag(std::string tagName) {
-  int tagBuf[1] = {tagName.size()};
+  int tagBuf[1] = {(int)tagName.size()};
   write(tagBuf, sizeof(int));
-  write((void *)tagName.c_str(), tagName.size() + 1);
+  write((void *)tagName.c_str(), tagName.size());
 }
