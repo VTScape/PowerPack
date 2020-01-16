@@ -14,8 +14,9 @@
 
 // CONTROL MESSAGE MACROS
 
-#define SESSION_START -2
-#define SESSION_END -1
+#define SESSION_START 0
+#define SESSION_END 1
+#define SESSION_TAG 2
 
 class socketServer {
  public:
@@ -57,7 +58,7 @@ class socketServer {
 
   // This marks the timestamp and string of a tag that has been
   // received.
-  void handleTag(int socketFD, int size);
+  void handleTag(int socketFD);
 };
 
 class socketClient {

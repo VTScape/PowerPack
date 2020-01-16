@@ -70,18 +70,23 @@ void socketServer::listenForClient() {
 }
 
 int socketServer::handleClientConnection(int readSocket) {
-  int msgTypeBuffer[1];
-  readData(readSocket, msgTypeBuffer, sizeof(int));
+  char msgTypeBuffer[1];
+  readData(readSocket, msgTypeBuffer, sizeof(char));
+  switch (msgTypeBuffer[0]) {
+    case SESSION_START:
+      handleSessionStart();
+      break;
 
-  if (msgTypeBuffer[0] == SESSION_START) {
-    handleSessionStart();
-  } else if (msgTypeBuffer[0] == SESSION_END) {
-    handleSessionEnd();
-    return 1;
-  } else if (msgTypeBuffer[0] > 0) {
-    handleTag(readSocket, msgTypeBuffer[0]);
-  } else {
-    printError("Server received unknown msg code");
+    case SESSION_END:
+      handleSessionEnd();
+      return 1;
+
+    case SESSION_TAG:
+      handleTag(readSocket);
+      break;
+
+    default:
+      printError("Server received unknown msg code");
   }
 
   return 0;
@@ -104,13 +109,18 @@ void socketServer::handleSessionEnd() {
   }
 }
 
-void socketServer::handleTag(int socketFD, int size) {
+void socketServer::handleTag(int socketFD) {
   // Timestamps is pushed with an empty string so that the nanoseconds timestamp
   // can be recorded as accurately as possible.
   timestamps.emplace_back("", nanos());
 
-  char *msgBuffer = new char[size];
-  readData(socketFD, msgBuffer, (size_t)size);
+  // This receives the size of the string that will be transmitted.
+  size_t sizeBuffer[1] = {0};
+  readData(socketFD, sizeBuffer, sizeof(size_t));
+
+  // This receives the tag string from the client.
+  char *msgBuffer = new char[sizeBuffer[0]];
+  readData(socketFD, msgBuffer, sizeBuffer[0]);
 
   // The correct tag is given to the timestamp.
   timestamps.back().first = msgBuffer;
@@ -157,17 +167,19 @@ void socketClient::write(void *buf, size_t size) {
 }
 
 void socketClient::sendSessionStart() {
-  int startBuf[1] = {SESSION_START};
-  write(startBuf, sizeof(int));
+  char startBuf[] = {SESSION_START};
+  write(startBuf, sizeof(char));
 }
 
 void socketClient::sendSessionEnd() {
-  int endBuf[1] = {SESSION_END};
-  write(endBuf, sizeof(int));
+  char endBuf[] = {SESSION_END};
+  write(endBuf, sizeof(char));
 }
 
 void socketClient::sendTag(std::string tagName) {
-  int tagBuf[1] = {(int)tagName.size()};
-  write(tagBuf, sizeof(int));
+  char tagBuf[] = {SESSION_TAG};
+  size_t tagSize[] = {(size_t)tagName.size()};
+  write(tagBuf, sizeof(char));
+  write(tagSize, sizeof(size_t));
   write((void *)tagName.c_str(), tagName.size());
 }
