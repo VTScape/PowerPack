@@ -6,3 +6,6 @@ clean:
 
 build:
 	make build -C ./src/
+
+tsocks:
+	make tsocks -C ./src/

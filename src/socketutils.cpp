@@ -45,59 +45,54 @@ void socketServer::listenForClient() {
   socklen_t clientLength;
   int readSocket;
 
-  if (listen(sock, 1) == -1){
+  if (listen(sock, 1) == -1) {
     printError("Server failed to listen on socket");
   }
 
   clientLength = sizeof(address);
-  if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1){
+  if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1) {
     printError("Error, the accept failed with errno: ");
   }
 
-  while(handleClientConnection(readSocket) != -1);
+  while (handleClientConnection(readSocket) != -1)
+    ;
 }
 
-
 int socketServer::handleClientConnection(int readSocket) {
-  std::cout << "The readsocket file descriptor is: " << readSocket << "\n";
-
   int msgTypeBuffer[1];
   readData(readSocket, msgTypeBuffer, sizeof(int));
 
-  if (msgTypeBuffer[0] == SESSION_START){
+  if (msgTypeBuffer[0] == SESSION_START) {
     handleSessionStart();
-  }
-  else if (msgTypeBuffer[0] == SESSION_END){
+  } else if (msgTypeBuffer[0] == SESSION_END) {
     handleSessionEnd();
     return -1;
-  }
-  else if (msgTypeBuffer[0] > 0){
+  } else if (msgTypeBuffer[0] > 0) {
     handleTag(readSocket, msgTypeBuffer[0]);
-  }
-  else{
+  } else {
     printError("Server received unknown msg code");
   }
 
   return 0;
 }
 
-void socketServer::handleSessionStart(){
-  //TODO
+void socketServer::handleSessionStart() {
+  // TODO
   std::cout << "session start\n";
 }
 
-void socketServer::handleSessionEnd(){
-  //TODO
+void socketServer::handleSessionEnd() {
+  // TODO
   std::cout << "session end\n";
-} 
+}
 
-void socketServer::handleTag(int socketFD, int size){
-  //TODO
+void socketServer::handleTag(int socketFD, int size) {
+  // TODO
   std::cout << "session tag\n";
   char *msgBuffer = new char[size];
-  readData(socketFD, msgBuffer, (size_t) size);
+  readData(socketFD, msgBuffer, (size_t)size);
   std::cout << "tag is: '" << msgBuffer << "'\n";
-  delete [] msgBuffer;
+  delete[] msgBuffer;
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {
@@ -140,7 +135,7 @@ void socketClient::sendSessionStart() {
   write(startBuf, sizeof(int));
 }
 
-void socketClient::sendSessionEnd(){
+void socketClient::sendSessionEnd() {
   int endBuf[1] = {SESSION_END};
   write(endBuf, sizeof(int));
 }
