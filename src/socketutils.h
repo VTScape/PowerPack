@@ -1,4 +1,5 @@
 #include <arpa/inet.h>
+#include <utility>
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -8,7 +9,8 @@
 #include <cstring>
 #include <iostream>
 #include <string>
-
+#include "timeutils.h"
+#include <vector>
 
 // CONTROL MESSAGE MACROS
 
@@ -24,11 +26,12 @@ class socketServer {
   void listenForClient();
 
  private:
-
   // This is the file descriptor of the socket.
   int sock;
 
   sockaddr_in address;
+
+  std::vector<std::pair<std::string, u_int64_t>> timestamps;
 
   // This is a wrapper for socket read that stores the data in the given buffer.
   void readData(int socketFD, void* buf, size_t size);

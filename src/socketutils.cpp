@@ -77,21 +77,28 @@ int socketServer::handleClientConnection(int readSocket) {
 }
 
 void socketServer::handleSessionStart() {
-  // TODO
+  timestamps.emplace_back("sessionStart", nanos());
   std::cout << "session start\n";
 }
 
 void socketServer::handleSessionEnd() {
-  // TODO
+  timestamps.emplace_back("sessionEnd", nanos());
   std::cout << "session end\n";
+  for (size_t index = 0; index < timestamps.size(); index++) {
+    std::cout << "Tag: " << timestamps[index].first << " happened "
+              << timestamps[index].second - timestamps[0].second
+              << " nanoseconds after the program start.\n";
+  }
 }
 
 void socketServer::handleTag(int socketFD, int size) {
-  // TODO
+  timestamps.emplace_back("", nanos());
+  std::cout << nanos();
   std::cout << "session tag\n";
   char *msgBuffer = new char[size];
   readData(socketFD, msgBuffer, (size_t)size);
   std::cout << "tag is: '" << msgBuffer << "'\n";
+  timestamps.back().first = msgBuffer;
   delete[] msgBuffer;
 }
 
