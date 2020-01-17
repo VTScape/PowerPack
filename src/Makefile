@@ -19,7 +19,7 @@ DEPS = nimeasure.o
 
 LIBFLAGS += -lm
 
-CDEBUG = -g
+CDEBUG = -ggdb3
 LDFLAGS += -g
 
 CFLAGS += $(CDEBUG)
@@ -53,7 +53,7 @@ tsocks: testsockets socketutils
 	$(CXX) -Wall -std=c++11 -pthread testsockets.o socketutils.o -o $@
 
 example: socketutils functionapi eventhandler
-	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall -std=c++11 serverexample.cpp *.o  -o server; \
+	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -ggdb3 -Wall -std=c++11 serverexample.cpp *.o  -o server; \
 	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall -std=c++11 clientexample.cpp *.o  -o client
 
 # serverexample: serverexample.o

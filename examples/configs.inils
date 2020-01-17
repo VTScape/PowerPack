@@ -1,0 +1,39 @@
+﻿[DAQmx]
+MajorVersion = 19
+MinorVersion = 5
+
+[DAQmxCDAQChassis cDAQ1]
+ProductType = cDAQ-9178
+DevSerialNum = 0x185021D
+
+[DAQmxCDAQChassis cDAQ3]
+ProductType = cDAQ-9178
+DevSerialNum = 0x0
+DevIsSimulated = 1
+
+[DAQmxCDAQModule cDAQ1Mod1]
+ProductType = NI 9205
+DevSerialNum = 0x15B5FBA
+CompactDAQ.ChassisDevName = cDAQ1
+CompactDAQ.SlotNum = 1
+
+[DAQmxCDAQModule cDAQ1Mod7]
+ProductType = NI 9205
+DevSerialNum = 0x171F696
+CompactDAQ.ChassisDevName = cDAQ1
+CompactDAQ.SlotNum = 7
+
+[DAQmxCDAQModule cDAQ3Mod1]
+ProductType = NI 9205
+DevSerialNum = 0x0
+DevIsSimulated = 1
+CompactDAQ.ChassisDevName = cDAQ3
+CompactDAQ.SlotNum = 1
+
+[DAQmxCDAQModule cDAQ3Mod2]
+ProductType = NI 9205
+DevSerialNum = 0x0
+DevIsSimulated = 1
+CompactDAQ.ChassisDevName = cDAQ3
+CompactDAQ.SlotNum = 2
+

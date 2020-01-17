@@ -17,8 +17,8 @@ void eventHandler::startHandler() {
   /*********************************************/
   DAQmxErrChk(DAQmxCreateTask("", &taskHandle));
   DAQmxErrChk(DAQmxCreateAIVoltageChan(
-      taskHandle, "cDAQ3Mod1/ai0, cDAQ3Mod2/ai0", "", DAQmx_Val_Cfg_Default,
-      -10.0, 10.0, DAQmx_Val_Volts, NULL));
+      taskHandle, "cDAQ1Mod1/ai0, cDAQ1Mod7/ai0", "", DAQmx_Val_Cfg_Default,
+      -10, 10, DAQmx_Val_Volts, NULL));
   DAQmxErrChk(DAQmxCfgSampClkTiming(taskHandle, "", 10000.0, DAQmx_Val_Rising,
                                     DAQmx_Val_ContSamps, 16000));
 
@@ -52,7 +52,13 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
   char errBuff[2048] = {'\0'};
   static int totalRead = 0;
   int32 read = 0;
-  float64 data[25000];
+  float64 data[10000];
+
+  std::string giantString;
+  for(size_t index = 0; index < 10000; index++) {
+    giantString += std::to_string(data[index]) + " ";
+  }
+  std::cout << giantString << "\n";
 
   /*********************************************/
   // DAQmx Read Code
