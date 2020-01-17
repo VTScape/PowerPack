@@ -5,7 +5,11 @@ void printError(std::string errorMsg) {
   exit(EXIT_FAILURE);
 }
 
-socketServer::socketServer(int portNumber) {
+socketServer::socketServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler) {
+  socketServer::startHandler = startHandler;
+  socketServer::endHandler = endHandler;
+  socketServer::tagHandler = tagHandler;
+
   // This causes the connection to be IPv4.
   address.sin_family = AF_INET;
   // This allows any address connection.
@@ -95,6 +99,7 @@ int socketServer::handleClientConnection(int readSocket) {
 void socketServer::handleSessionStart() {
   timestamps.emplace_back("sessionStart", nanos());
   // TODO: start the meter
+  socketServer::startHandler();
 }
 
 void socketServer::handleSessionEnd() {
@@ -107,6 +112,8 @@ void socketServer::handleSessionEnd() {
               << timestamps[index].second - timestamps[0].second
               << " nanoseconds after the program start.\n";
   }
+
+  socketServer::endHandler();
 }
 
 void socketServer::handleTag(int socketFD) {
@@ -126,6 +133,7 @@ void socketServer::handleTag(int socketFD) {
   timestamps.back().first = msgBuffer;
 
   delete[] msgBuffer;
+  socketServer::tagHandler();
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {

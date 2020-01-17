@@ -52,7 +52,20 @@ $(TARGET) : $(OBJS) nimeasure
 tsocks: testsockets socketutils
 	$(CXX) -Wall -std=c++11 -pthread testsockets.o socketutils.o -o $@
 
-socketutils: socketutils.o
+example: serverexample clientexample socketutils functionapi
+	$(CXX) -Wall -std=c++11 serverexample.o functionapi.o socketutils.o timeutils.o -o server; \
+	$(CXX) -Wall -std=c++11 clientexample.o functionapi.o socketutils.o timeutils.o -o client
+
+serverexample: serverexample.o
+	$(CXX) -c $@.cpp
+
+clientexample: clientexample.o
+	$(CXX) -c $@.cpp
+
+functionapi: functionapi.o
+	$(CXX) -c $@.cpp
+
+socketutils: socketutils.o timeutils
 	$(CXX) -c $@.cpp
 
 testsockets: testsockets.o

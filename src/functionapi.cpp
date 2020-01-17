@@ -1,14 +1,18 @@
 #include "functionapi.h"
 
+socketServer initializeMeterServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler){
+  socketServer server(portNumber, startHandler, endHandler, tagHandler);
+  return server;
+}
+
 int readServerConfig(std::string configFilePath) {
   std::string portNumber;
   std::string tempString;
   std::ifstream configFile;
 
   configFile.open(configFilePath);
-  getline(configFile, tempString);
-
-  while (!configFile.eof) {
+  
+  while (!configFile.eof()) {
     getline(configFile, tempString);
     if (isSubString(tempString, "port")) {
       portNumber = extractConfigValue(tempString);
@@ -26,6 +30,11 @@ int readServerConfig(std::string configFilePath) {
   return stoi(portNumber, nullptr, 10);
 }
 
+socketClient initializeFunctionClient(std::pair<int, std::string> clientNetworkInfo){
+  socketClient client(clientNetworkInfo.first, clientNetworkInfo.second);
+  return client;
+}
+
 std::pair<int, std::string> readClientConfig(std::string configFilePath) {
   std::string portNumber = "";
   std::string IPAddress = "";
@@ -34,8 +43,9 @@ std::pair<int, std::string> readClientConfig(std::string configFilePath) {
 
   configFile.open(configFilePath);
 
-  while (!configFile.eof) {
+  while (!configFile.eof()) {
     getline(configFile, tempString);
+    std::cout << tempString << std::endl;
     if (isSubString(tempString, "port")) {
       portNumber = extractConfigValue(tempString);
     } else if (isSubString(tempString, "serveraddress")) {
@@ -56,7 +66,7 @@ std::pair<int, std::string> readClientConfig(std::string configFilePath) {
 
 std::string extractConfigValue(std::string inputString) {
   size_t delimPosition;
-
+  std::cout << "extracting\n";
   if ((delimPosition = inputString.find("=")) == std::string::npos) {
     std::cerr << "Unable to find '=' in config file\n";
     exit(EXIT_FAILURE);

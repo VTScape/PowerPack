@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 #include "timeutils.h"
+#include <functional>
 
 // CONTROL MESSAGE MACROS
 
@@ -20,7 +21,7 @@
 
 class socketServer {
  public:
-  socketServer(int portNumber);
+  socketServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler);
 
   ~socketServer();
 
@@ -31,7 +32,10 @@ class socketServer {
  private:
   // This is the file descriptor of the socket.
   int sock;
-
+  std::function<void()> startHandler;
+  std::function<void()> endHandler;
+  std::function<void()> tagHandler;
+  
   // This stores information about the server that is being connected to.
   sockaddr_in address;
 

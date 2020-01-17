@@ -5,12 +5,12 @@
 #include "socketutils.h"
 /*
  * API For users who want to generate a power profile for their functions
- * Client and server are two processes
+ * Client and server are seperate processes that communicate over a tcp socket
  * Client sends timestamped tags to server
- * Server handles data collection via ni-meter
+ * Server handles data collection via ni-meter and 
  */
 
-socketServer initializeMeterServer(int portNumber);
+socketServer initializeMeterServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler);
 void closeMeterServer();
 int readServerConfig(std::string configFilePath);
 
