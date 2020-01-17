@@ -2,13 +2,10 @@
 #ifndef EVENT_HANDLER_H
 #define EVENT_HANDLER_H
 
-#include <string>
-#include <iostream>
 #include <NIDAQmx.h>
 #include <stdio.h>
-
-
-
+#include <iostream>
+#include <string>
 
 /*********************************************************************
  *
@@ -53,27 +50,36 @@
  *
  *********************************************************************/
 
+#define BUFFER_SIZE 100
+
 #define DAQmxErrChk(functionCall)          \
   if (DAQmxFailed(error = (functionCall))) \
     goto Error;                            \
   else
 
 int NIMeasure(void);
-int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
-                                 int32 everyNsamplesEventType, uInt32 nSamples,
-                                 void *callbackData);
-int32 CVICALLBACK DoneCallback(TaskHandle taskHandle, int32 status,
-                               void *callbackData);
+
+int32 CVICALLBACK DoneCallback(TaskHandle taskHandle,
+                                               int32 status,
+                                               void *callbackData);
+  int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
+                                                 int32 everyNsamplesEventType,
+                                                 uInt32 nSamples,
+                                                 void *callbackData);
 
 class eventHandler {
-    public:
-        eventHandler(void);
-        eventHandler(std::string logFilePath);
-        void startHandler();
-        void tagHandler();
-        void endHandler();    
-    private:
-        TaskHandle taskHandle;
-        std::string logfilePath;
+ public:
+  eventHandler(void);
+  eventHandler(std::string logFilePath);
+  void startHandler();
+  void tagHandler();
+  void endHandler();
+
+ private:
+  TaskHandle taskHandle;
+  std::string logfilePath;
+  bool stopFlag = false;
+
+  
 };
 #endif

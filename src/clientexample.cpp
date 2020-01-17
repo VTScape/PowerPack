@@ -9,7 +9,6 @@ int main(int argc, char** argv) {
   client.sendTag(testString);
   std::cout << "Hello World!\n";
   client.sendTag("Done Printing");
-  sleep(1);
 
   int a;
   client.sendTag("About to add some numbers");

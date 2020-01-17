@@ -1,5 +1,14 @@
 #include "eventhandler.h"
 
+// Hi there! I know this flag is really stupid, we shouldn't have made it
+// global, but honestly we tried a bunch of stuff and couldn't make this part of
+// the eventHandler class and didn't want to mess around changing NIDAQ
+// functions too much, so we just made this global variable, and now
+// EveryNCallbacks is always called before the meter stops recording, so you are
+// guaranteed to have data. If you know of a better way to do this, contact
+// us.
+bool stopFlag = false;
+
 eventHandler::eventHandler(void){};
 
 eventHandler::eventHandler(std::string logFilePath) {
@@ -23,7 +32,7 @@ void eventHandler::startHandler() {
                                     DAQmx_Val_ContSamps, 16000));
 
   DAQmxErrChk(DAQmxRegisterEveryNSamplesEvent(
-      taskHandle, DAQmx_Val_Acquired_Into_Buffer, 20, 0, EveryNCallback, NULL));
+      taskHandle, DAQmx_Val_Acquired_Into_Buffer, 40, 0, EveryNCallback, NULL));
   DAQmxErrChk(DAQmxRegisterDoneEvent(taskHandle, 0, DoneCallback, NULL));
 
   /*********************************************/
@@ -32,17 +41,16 @@ void eventHandler::startHandler() {
   DAQmxErrChk(DAQmxStartTask(taskHandle));
 
 Error:
-    if (DAQmxFailed(error)){
-      std::cout << "error has happened";
-    }
+  if (DAQmxFailed(error)) {
+    std::cout << "error has happened";
+  }
 }
 
 void eventHandler::tagHandler() { std::cout << "me tag\n"; }
 
 void eventHandler::endHandler() {
   std::cout << "me end\n";
-  DAQmxStopTask(taskHandle);
-  DAQmxClearTask(taskHandle);
+  stopFlag = true;
 }
 
 int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
@@ -52,13 +60,13 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
   char errBuff[2048] = {'\0'};
   static int totalRead = 0;
   int32 read = 0;
-  float64 data[10000];
+  float64 data[BUFFER_SIZE];
 
   std::string giantString;
-  for(size_t index = 0; index < 10000; index++) {
+  for (size_t index = 0; index < BUFFER_SIZE; index++) {
     giantString += std::to_string(data[index]) + " ";
   }
-  std::cout << giantString << "\n";
+  std::cout << giantString << "\n\n\n";
 
   /*********************************************/
   // DAQmx Read Code
@@ -69,6 +77,10 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
     printf("Acquired %d samples. Total %d\r", (int)read,
            (int)(totalRead += read));
     fflush(stdout);
+  }
+  if (stopFlag) {
+    DAQmxStopTask(taskHandle);
+    DAQmxClearTask(taskHandle);
   }
 
 Error:
