@@ -1,6 +1,9 @@
 #include "functionapi.h"
 
-socketServer initializeMeterServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler){
+socketServer initializeMeterServer(int portNumber,
+                                   std::function<void()> startHandler,
+                                   std::function<void()> endHandler,
+                                   std::function<void()> tagHandler) {
   socketServer server(portNumber, startHandler, endHandler, tagHandler);
   return server;
 }
@@ -11,7 +14,7 @@ int readServerConfig(std::string configFilePath) {
   std::ifstream configFile;
 
   configFile.open(configFilePath);
-  
+
   while (!configFile.eof()) {
     getline(configFile, tempString);
     if (isSubString(tempString, "port")) {
@@ -30,7 +33,8 @@ int readServerConfig(std::string configFilePath) {
   return stoi(portNumber, nullptr, 10);
 }
 
-socketClient initializeFunctionClient(std::pair<int, std::string> clientNetworkInfo){
+socketClient initializeFunctionClient(
+    std::pair<int, std::string> clientNetworkInfo) {
   socketClient client(clientNetworkInfo.first, clientNetworkInfo.second);
   return client;
 }

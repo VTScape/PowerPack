@@ -6,12 +6,12 @@
 #include <cerrno>
 #include <clocale>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
 #include "timeutils.h"
-#include <functional>
 
 // CONTROL MESSAGE MACROS
 
@@ -21,7 +21,9 @@
 
 class socketServer {
  public:
-  socketServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler);
+  socketServer(int portNumber, std::function<void()> startHandler,
+               std::function<void()> endHandler,
+               std::function<void()> tagHandler);
 
   ~socketServer();
 
@@ -35,7 +37,7 @@ class socketServer {
   std::function<void()> startHandler;
   std::function<void()> endHandler;
   std::function<void()> tagHandler;
-  
+
   // This stores information about the server that is being connected to.
   sockaddr_in address;
 

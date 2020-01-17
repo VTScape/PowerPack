@@ -5,7 +5,9 @@ void printError(std::string errorMsg) {
   exit(EXIT_FAILURE);
 }
 
-socketServer::socketServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler) {
+socketServer::socketServer(int portNumber, std::function<void()> startHandler,
+                           std::function<void()> endHandler,
+                           std::function<void()> tagHandler) {
   socketServer::startHandler = startHandler;
   socketServer::endHandler = endHandler;
   socketServer::tagHandler = tagHandler;

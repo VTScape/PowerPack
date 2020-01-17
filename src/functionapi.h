@@ -7,14 +7,18 @@
  * API For users who want to generate a power profile for their functions
  * Client and server are seperate processes that communicate over a tcp socket
  * Client sends timestamped tags to server
- * Server handles data collection via ni-meter and 
+ * Server handles data collection via ni-meter and
  */
 
-socketServer initializeMeterServer(int portNumber, std::function<void()> startHandler, std::function<void()> endHandler, std::function<void()> tagHandler);
+socketServer initializeMeterServer(int portNumber,
+                                   std::function<void()> startHandler,
+                                   std::function<void()> endHandler,
+                                   std::function<void()> tagHandler);
 void closeMeterServer();
 int readServerConfig(std::string configFilePath);
 
-socketClient initializeFunctionClient(std::pair<int, std::string> clientNetworkInfo);
+socketClient initializeFunctionClient(
+    std::pair<int, std::string> clientNetworkInfo);
 void closeFunctionClient();
 void issueTag(std::string tagName);
 std::pair<int, std::string> readClientConfig(std::string configFilePath);
