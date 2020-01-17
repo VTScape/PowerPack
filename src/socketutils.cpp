@@ -5,18 +5,14 @@ void printError(std::string errorMsg) {
   exit(EXIT_FAILURE);
 }
 
-socketServer::socketServer(int portNumber, std::function<void()> startHandler,
-                           std::function<void()> endHandler,
-                           std::function<void()> tagHandler) {
-  socketServer::startHandler = startHandler;
-  socketServer::endHandler = endHandler;
-  socketServer::tagHandler = tagHandler;
+socketServer::socketServer(int portNumber, eventHandler handler) {
+  socketServer::handler = handler;
 
   // This causes the connection to be IPv4.
   address.sin_family = AF_INET;
   // This allows any address connection.
   address.sin_addr.s_addr = INADDR_ANY;
-  // This resolves the given port number.
+  // This resolves the given port number.I
   address.sin_port = htons(portNumber);
   int opt = 1;
 
@@ -99,14 +95,17 @@ int socketServer::handleClientConnection(int readSocket) {
 }
 
 void socketServer::handleSessionStart() {
-  timestamps.emplace_back("sessionStart", nanos());
+  
   // TODO: start the meter
-  socketServer::startHandler();
+  socketServer::handler.startHandler();
+  timestamps.emplace_back("sessionStart", nanos());
 }
 
 void socketServer::handleSessionEnd() {
   timestamps.emplace_back("sessionEnd", nanos());
   // TODO: stop the meter
+
+socketServer::handler.endHandler();
 
   // TODO: dump to a file instead of to cout
   for (size_t index = 0; index < timestamps.size(); index++) {
@@ -115,7 +114,7 @@ void socketServer::handleSessionEnd() {
               << " nanoseconds after the program start.\n";
   }
 
-  socketServer::endHandler();
+  
 }
 
 void socketServer::handleTag(int socketFD) {
@@ -135,7 +134,7 @@ void socketServer::handleTag(int socketFD) {
   timestamps.back().first = msgBuffer;
 
   delete[] msgBuffer;
-  socketServer::tagHandler();
+  socketServer::handler.tagHandler();
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {
@@ -188,8 +187,8 @@ void socketClient::sendSessionEnd() {
 
 void socketClient::sendTag(std::string tagName) {
   char tagBuf[] = {SESSION_TAG};
-  size_t tagSize[] = {(size_t)tagName.size()};
+  size_t tagSize[] = {tagName.size() + 1};
   write(tagBuf, sizeof(char));
   write(tagSize, sizeof(size_t));
-  write((void *)tagName.c_str(), tagName.size());
+  write((void *)tagName.c_str(), tagName.size() + 1);
 }

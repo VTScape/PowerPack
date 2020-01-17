@@ -2,9 +2,11 @@
 
 int main(int argc, char** argv) {
   std::string configFile(argv[1]);
+  std::string testString = "About to print";
   socketClient client = initializeFunctionClient(readClientConfig(configFile));
   client.sendSessionStart();
-  client.sendTag("About to print");
+  
+  client.sendTag(testString);
   std::cout << "Hello World!\n";
   client.sendTag("Done Printing");
 

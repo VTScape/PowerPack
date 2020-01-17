@@ -1,10 +1,7 @@
 #include "functionapi.h"
 
-socketServer initializeMeterServer(int portNumber,
-                                   std::function<void()> startHandler,
-                                   std::function<void()> endHandler,
-                                   std::function<void()> tagHandler) {
-  socketServer server(portNumber, startHandler, endHandler, tagHandler);
+socketServer initializeMeterServer(int portNumber, eventHandler handler) {
+  socketServer server(portNumber, handler);
   return server;
 }
 

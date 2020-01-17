@@ -52,15 +52,15 @@ $(TARGET) : $(OBJS) nimeasure
 tsocks: testsockets socketutils
 	$(CXX) -Wall -std=c++11 -pthread testsockets.o socketutils.o -o $@
 
-example: serverexample clientexample socketutils functionapi
-	$(CXX) -Wall -std=c++11 serverexample.o functionapi.o socketutils.o timeutils.o -o server; \
-	$(CXX) -Wall -std=c++11 clientexample.o functionapi.o socketutils.o timeutils.o -o client
+example: socketutils functionapi eventhandler
+	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall -std=c++11 serverexample.cpp *.o  -o server; \
+	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall -std=c++11 clientexample.cpp *.o  -o client
 
-serverexample: serverexample.o
-	$(CXX) -c $@.cpp
+# serverexample: serverexample.o
+# 	$(CXX) -c $@.cpp
 
-clientexample: clientexample.o
-	$(CXX) -c $@.cpp
+# clientexample: clientexample.o
+# 	$(CXX) -c $@.cpp
 
 functionapi: functionapi.o
 	$(CXX) -c $@.cpp
@@ -69,10 +69,10 @@ socketutils: socketutils.o timeutils
 	$(CXX) -c $@.cpp
 
 testsockets: testsockets.o
-	$(CXX) -c testsockets.cpp
-
-nimeasure: nimeasure.o
 	$(CXX) -c $@.cpp
 
 timeutils: timeutils.o
+	$(CXX) -c $@.cpp
+
+eventhandler: eventhandler.o 
 	$(CXX) -c $@.cpp
