@@ -41,7 +41,7 @@ all: $(TARGET)
 build: $(TARGET) clean_obs
 
 clean:
-	rm -f *.o $(TARGET) core
+	rm -f *.o $(TARGET) core client server tsocks
 
 clean_obs:
 	rm -f *.o core 
