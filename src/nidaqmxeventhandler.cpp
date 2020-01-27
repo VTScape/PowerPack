@@ -1,4 +1,4 @@
-#include "eventhandler.h"
+#include "nidaqmxeventhandler.h"
 
 // Hi there! I know this flag is really stupid, we shouldn't have made it
 // global, but honestly we tried a bunch of stuff and couldn't make this part of
@@ -9,14 +9,14 @@
 // us.
 bool stopFlag = false;
 
-eventHandler::eventHandler(void){};
+NIDAQmxEventHandler::NIDAQmxEventHandler(void){};
 
-eventHandler::eventHandler(std::string logFilePath) {
-  eventHandler::logfilePath = logFilePath;
+NIDAQmxEventHandler::NIDAQmxEventHandler(std::string logFilePath) {
+  NIDAQmxEventHandler::logfilePath = logFilePath;
 }
 
-void eventHandler::startHandler() {
-  std::cout << "me start\n";
+void NIDAQmxEventHandler::startHandler() {
+  std::cout << "me start\n
   int32 error = 0;
   taskHandle = 0;
   char errBuff[2048] = {'\0'};
@@ -46,9 +46,9 @@ Error:
   }
 }
 
-void eventHandler::tagHandler() { std::cout << "me tag\n"; }
+void NIDAQmxEventHandler::tagHandler() { std::cout << "me tag\n"; }
 
-void eventHandler::endHandler() {
+void NIDAQmxEventHandler::endHandler() {
   std::cout << "me end\n";
   stopFlag = true;
 }

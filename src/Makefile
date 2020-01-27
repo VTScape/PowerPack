@@ -36,6 +36,7 @@ CFLAGS += -I$(NIDAQmx_HEADER_DIR) -arch i386 -arch x86_64
 LDFLAGS += -arch i386 -arch x86_64
 endif
 
+
 all: $(TARGET)
 
 build: $(TARGET) clean_obs
@@ -62,17 +63,15 @@ example: socketutils functionapi eventhandler
 # clientexample: clientexample.o
 # 	$(CXX) -c $@.cpp
 
-functionapi: functionapi.o
-	$(CXX) -c $@.cpp
 
-socketutils: socketutils.o timeutils
-	$(CXX) -c $@.cpp
+clientexample.o: functionapi.h
+serverexample.o: functionapi.h nidaqmxeventhandler.h
+functionapi.o: functionapi.h
+testsockets.o: socketutils.h
+socketutils.o: eventhandler.h sockutils.h
+nidaqmxeventhandler.o: eventhandler.h nidaqmxeventhandler.h
+timeutils.o: timeutils.h
 
-testsockets: testsockets.o
-	$(CXX) -c $@.cpp
-
-timeutils: timeutils.o
-	$(CXX) -c $@.cpp
-
-eventhandler: eventhandler.o 
-	$(CXX) -c $@.cpp
+.PHONY: clean
+clean:
+	rm -f *.o $(TARGET) core client server tsocks
