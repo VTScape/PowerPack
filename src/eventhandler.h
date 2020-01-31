@@ -7,8 +7,10 @@
 
 class eventHandler {
  public:
-  virtual void startHandler();
-  virtual void tagHandler();
-  virtual void endHandler();
+  eventHandler();
+  virtual void startHandler() = 0;
+  virtual void tagHandler() = 0;
+  virtual void endHandler() = 0;
+  ~eventHandler();
 };
 #endif

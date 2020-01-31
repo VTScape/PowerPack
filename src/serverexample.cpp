@@ -6,8 +6,11 @@ int main(int argc, char** argv) {
   NIDAQmxEventHandler niHandler(argv[2]);
   eventHandler *handler;
   handler = &niHandler;
-  socketServer server =
-      initializeMeterServer(readServerConfig(configFile), *handler);
-  server.listenForClient();
+  //socketServer server =
+  //    initializeMeterServer(readServerConfig(configFile), handler);
+  //server.listenForClient();
+  
+  handler->startHandler();
+
   return 0;
 }

@@ -1,6 +1,6 @@
 #include "functionapi.h"
 
-socketServer initializeMeterServer(int portNumber, eventHandler handler) {
+socketServer initializeMeterServer(int portNumber, eventHandler *handler) {
   socketServer server(portNumber, handler);
   return server;
 }

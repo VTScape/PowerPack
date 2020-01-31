@@ -1,5 +1,9 @@
 SHELL = /bin/sh
 
+###########NIDAQMAX STUFF
+CXX = g++
+CXXFLAGS += -std=c++11
+
 LIBS = nidaqmx
 
 OS := $(shell uname)
@@ -11,67 +15,54 @@ LIBFLAGS = -l$(LIBS)
 LDFLAGS += -L/usr/lib/x86_64-linux-gnu
 endif
 
-TARGET = helloworld
-
-OBJS = $(TARGET).o
-
-DEPS = nimeasure.o
-
 LIBFLAGS += -lm
 
 CDEBUG = -ggdb3
 LDFLAGS += -g
 
-CFLAGS += $(CDEBUG)
+CXXFLAGS += $(CDEBUG)
 
 ifneq ($(filter $(OS), Linux Darwin),)
-CFLAGS += -D_POSIX_C_SOURCE=200809L
+CXXFLAGS += -D_POSIX_C_SOURCE=200809L
 endif
 
 ifeq ($(OS),Darwin)
 # Using #include <NIDAQmx.h> requires NIDAQmx.h to be in the include path.
 # Using #include <nidaqmx/NIDAQmx.h> takes advantage of the fact that nidaqmx.framework/Headers contains NIDAQmx.h, but this only works on OS X.
 NIDAQmx_HEADER_DIR = /Library/Frameworks/nidaqmx.framework/Headers
-CFLAGS += -I$(NIDAQmx_HEADER_DIR) -arch i386 -arch x86_64
+CXXFLAGS += -I$(NIDAQmx_HEADER_DIR) -arch i386 -arch x86_64
 LDFLAGS += -arch i386 -arch x86_64
 endif
 
+###########
 
-all: $(TARGET)
+OBJS = functionapi.o socketutils.o nidaqmxeventhandler.o timeutils.o eventhandler.o
 
-build: $(TARGET) clean_obs
+all: example
 
-clean:
-	rm -f *.o $(TARGET) core client server tsocks
+build: example clean
 
-clean_obs:
-	rm -f *.o core 
+example: serverexample clientexample
 
-$(TARGET) : $(OBJS) nimeasure
-	$(CXX) $(LDFLAGS) $(DEPS) -o $@ $(OBJS)
+testsockets: testsockets.o $(OBJS)
+	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall testsockets.o $(OBJS) -o testsockets
 
-tsocks: testsockets socketutils
-	$(CXX) -Wall -std=c++11 -pthread testsockets.o socketutils.o -o $@
-
-example: socketutils functionapi eventhandler
-	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -ggdb3 -Wall -std=c++11 serverexample.cpp *.o  -o server; \
-	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall -std=c++11 clientexample.cpp *.o  -o client
-
-# serverexample: serverexample.o
-# 	$(CXX) -c $@.cpp
-
-# clientexample: clientexample.o
-# 	$(CXX) -c $@.cpp
-
+serverexample: serverexample.o $(OBJS)
+	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall serverexample.o $(OBJS) -o serverexample
+	
+clientexample: clientexample.o $(OBJS)
+	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall clientexample.o $(OBJS) -o clientexample
 
 clientexample.o: functionapi.h
 serverexample.o: functionapi.h nidaqmxeventhandler.h
-functionapi.o: functionapi.h
 testsockets.o: socketutils.h
-socketutils.o: eventhandler.h sockutils.h
+
+functionapi.o: functionapi.h
+socketutils.o: eventhandler.h socketutils.h timeutils.h
 nidaqmxeventhandler.o: eventhandler.h nidaqmxeventhandler.h
+eventhandler.o: eventhandler.h
 timeutils.o: timeutils.h
 
 .PHONY: clean
 clean:
-	rm -f *.o $(TARGET) core client server tsocks
+	rm -f *.o valgrind.log %1 core clientexample serverexample testsockets

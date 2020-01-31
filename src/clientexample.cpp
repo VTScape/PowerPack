@@ -14,5 +14,6 @@ int main(int argc, char** argv) {
   client.sendTag("About to add some numbers");
   a = 2 + 2;
   client.sendTag("Done adding numbers");
+  
   client.sendSessionEnd();
 }

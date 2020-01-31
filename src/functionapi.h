@@ -10,7 +10,7 @@
  * Server handles data collection via ni-meter and
  */
 
-socketServer initializeMeterServer(int portNumber, eventHandler handler);
+socketServer initializeMeterServer(int portNumber, eventHandler *handler);
 void closeMeterServer();
 int readServerConfig(std::string configFilePath);
 

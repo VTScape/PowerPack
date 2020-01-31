@@ -46,7 +46,9 @@
  *
  *********************************************************************/
 
-#define BUFFER_SIZE 100
+#define NUM_CHANNELS 2 //number of channels used on chassis
+#define NUM_SAMPLES 40 //num samples per callback
+#define BUFFER_SIZE NUM_SAMPLES * NUM_CHANNELS
 
 #define DAQmxErrChk(functionCall)          \
   if (DAQmxFailed(error = (functionCall))) \
@@ -65,10 +67,12 @@ class NIDAQmxEventHandler : public eventHandler {
  public:
   NIDAQmxEventHandler(void);
   NIDAQmxEventHandler(std::string logFilePath);
+  ~NIDAQmxEventHandler(void);
+  
 
-  virtual void startHandler();
-  virtual void tagHandler();
-  virtual void endHandler();
+  void startHandler();
+  void tagHandler();
+  void endHandler();
 
  private:
   TaskHandle taskHandle;

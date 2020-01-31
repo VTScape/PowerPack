@@ -5,7 +5,7 @@ void printError(std::string errorMsg) {
   exit(EXIT_FAILURE);
 }
 
-socketServer::socketServer(int portNumber, eventHandler handler) {
+socketServer::socketServer(int portNumber, eventHandler *handler) {
   socketServer::handler = handler;
 
   // This causes the connection to be IPv4.
@@ -97,7 +97,7 @@ int socketServer::handleClientConnection(int readSocket) {
 void socketServer::handleSessionStart() {
   
   // TODO: start the meter
-  socketServer::handler.startHandler();
+  socketServer::handler->startHandler();
   timestamps.emplace_back("sessionStart", nanos());
 }
 
@@ -105,7 +105,7 @@ void socketServer::handleSessionEnd() {
   timestamps.emplace_back("sessionEnd", nanos());
   // TODO: stop the meter
 
-socketServer::handler.endHandler();
+socketServer::handler->endHandler();
 
   // TODO: dump to a file instead of to cout
   for (size_t index = 0; index < timestamps.size(); index++) {
@@ -134,7 +134,7 @@ void socketServer::handleTag(int socketFD) {
   timestamps.back().first = msgBuffer;
 
   delete[] msgBuffer;
-  socketServer::handler.tagHandler();
+  socketServer::handler->tagHandler();
 }
 
 socketClient::socketClient(int portNumber, std::string serverIP) {

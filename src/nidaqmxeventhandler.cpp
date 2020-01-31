@@ -1,5 +1,5 @@
 #include "nidaqmxeventhandler.h"
-
+#include <iostream>
 // Hi there! I know this flag is really stupid, we shouldn't have made it
 // global, but honestly we tried a bunch of stuff and couldn't make this part of
 // the eventHandler class and didn't want to mess around changing NIDAQ
@@ -10,13 +10,15 @@
 bool stopFlag = false;
 
 NIDAQmxEventHandler::NIDAQmxEventHandler(void){};
+NIDAQmxEventHandler::~NIDAQmxEventHandler(void){};
 
 NIDAQmxEventHandler::NIDAQmxEventHandler(std::string logFilePath) {
   NIDAQmxEventHandler::logfilePath = logFilePath;
 }
 
 void NIDAQmxEventHandler::startHandler() {
-  std::cout << "me start\n
+  try{
+  std::cout << "Event Handler: Starting...\n";
   int32 error = 0;
   taskHandle = 0;
   char errBuff[2048] = {'\0'};
@@ -32,7 +34,7 @@ void NIDAQmxEventHandler::startHandler() {
                                     DAQmx_Val_ContSamps, 16000));
 
   DAQmxErrChk(DAQmxRegisterEveryNSamplesEvent(
-      taskHandle, DAQmx_Val_Acquired_Into_Buffer, 40, 0, EveryNCallback, NULL));
+      taskHandle, DAQmx_Val_Acquired_Into_Buffer, NUM_SAMPLES, 0, EveryNCallback, NULL));
   DAQmxErrChk(DAQmxRegisterDoneEvent(taskHandle, 0, DoneCallback, NULL));
 
   /*********************************************/
@@ -42,14 +44,31 @@ void NIDAQmxEventHandler::startHandler() {
 
 Error:
   if (DAQmxFailed(error)) {
-    std::cout << "error has happened";
+    // Get and print error information
+    std::cout << "### !!EVENT FAILED!! ###" << std::endl;
+
+    // get the number of bytes needed to receive the last failure
+    int numBytes = DAQmxGetExtendedErrorInfo(NULL, 0); 
+    char *err = new char[numBytes];
+    DAQmxGetExtendedErrorInfo(err, numBytes);
+
+    std::cout << err << std::endl << "#############" << std::endl;
+    delete err;
+  }
+
+  }
+
+  catch(std::exception& e){
+    std::cout << e.what() << std::endl;
   }
 }
 
-void NIDAQmxEventHandler::tagHandler() { std::cout << "me tag\n"; }
+void NIDAQmxEventHandler::tagHandler() { 
+  std::cout << "Event Handler: Tag" << std:: endl; 
+}
 
 void NIDAQmxEventHandler::endHandler() {
-  std::cout << "me end\n";
+  std::cout << "Event Handler: Ending Session..." << std::endl;
   stopFlag = true;
 }
 

@@ -21,7 +21,7 @@
 
 class socketServer {
  public:
-  socketServer(int portNumber, eventHandler handler);
+  socketServer(int portNumber, eventHandler *handler);
 
   ~socketServer();
 
@@ -32,7 +32,7 @@ class socketServer {
  private:
   // This is the file descriptor of the socket.
   int sock;
-  eventHandler handler;
+  eventHandler *handler;
 
   // This stores information about the server that is being connected to.
   sockaddr_in address;
