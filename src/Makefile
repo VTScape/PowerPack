@@ -4,6 +4,7 @@ SHELL = /bin/sh
 CXX = g++
 CXXFLAGS += -std=c++11
 
+
 LIBS = nidaqmx
 
 OS := $(shell uname)
@@ -49,7 +50,6 @@ testsockets: testsockets.o $(OBJS)
 
 serverexample: serverexample.o $(OBJS)
 	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall serverexample.o $(OBJS) -o serverexample
-	
 clientexample: clientexample.o $(OBJS)
 	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall clientexample.o $(OBJS) -o clientexample
 

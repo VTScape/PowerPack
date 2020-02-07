@@ -181,6 +181,7 @@ void socketClient::sendSessionStart() {
 }
 
 void socketClient::sendSessionEnd() {
+  
   char endBuf[] = {SESSION_END};
   write(endBuf, sizeof(char));
 }

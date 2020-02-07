@@ -11,6 +11,6 @@ class eventHandler {
   virtual void startHandler() = 0;
   virtual void tagHandler() = 0;
   virtual void endHandler() = 0;
-  ~eventHandler();
+  virtual ~eventHandler();
 };
 #endif

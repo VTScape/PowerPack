@@ -1,13 +1,5 @@
 #include "nidaqmxeventhandler.h"
 #include <iostream>
-// Hi there! I know this flag is really stupid, we shouldn't have made it
-// global, but honestly we tried a bunch of stuff and couldn't make this part of
-// the eventHandler class and didn't want to mess around changing NIDAQ
-// functions too much, so we just made this global variable, and now
-// EveryNCallbacks is always called before the meter stops recording, so you are
-// guaranteed to have data. If you know of a better way to do this, contact
-// us.
-bool stopFlag = false;
 
 NIDAQmxEventHandler::NIDAQmxEventHandler(void){};
 NIDAQmxEventHandler::~NIDAQmxEventHandler(void){};
@@ -17,24 +9,27 @@ NIDAQmxEventHandler::NIDAQmxEventHandler(std::string logFilePath) {
 }
 
 void NIDAQmxEventHandler::startHandler() {
-  try{
   std::cout << "Event Handler: Starting...\n";
   int32 error = 0;
   taskHandle = 0;
-  char errBuff[2048] = {'\0'};
+  char errBuff[ERRBUFF] = {'\0'};
 
   /*********************************************/
   // DAQmx Configure Code
   /*********************************************/
   DAQmxErrChk(DAQmxCreateTask("", &taskHandle));
+
   DAQmxErrChk(DAQmxCreateAIVoltageChan(
-      taskHandle, "cDAQ1Mod1/ai0, cDAQ1Mod7/ai0", "", DAQmx_Val_Cfg_Default,
-      -10, 10, DAQmx_Val_Volts, NULL));
-  DAQmxErrChk(DAQmxCfgSampClkTiming(taskHandle, "", 10000.0, DAQmx_Val_Rising,
-                                    DAQmx_Val_ContSamps, 16000));
+      taskHandle, "cDAQ1Mod1/ai0,cDAQ1Mod1/ai5", "", DAQmx_Val_Cfg_Default,
+      -10.0, 10.0, DAQmx_Val_Volts, NULL));
+
+  DAQmxErrChk(DAQmxCfgSampClkTiming(taskHandle, NULL, 10000.0, DAQmx_Val_Rising,
+                                    DAQmx_Val_ContSamps, 1000));
 
   DAQmxErrChk(DAQmxRegisterEveryNSamplesEvent(
-      taskHandle, DAQmx_Val_Acquired_Into_Buffer, NUM_SAMPLES, 0, EveryNCallback, NULL));
+      taskHandle, DAQmx_Val_Acquired_Into_Buffer, NUM_SAMPLES, 0,
+      EveryNCallback, NULL));
+
   DAQmxErrChk(DAQmxRegisterDoneEvent(taskHandle, 0, DoneCallback, NULL));
 
   /*********************************************/
@@ -44,32 +39,19 @@ void NIDAQmxEventHandler::startHandler() {
 
 Error:
   if (DAQmxFailed(error)) {
-    // Get and print error information
-    std::cout << "### !!EVENT FAILED!! ###" << std::endl;
-
-    // get the number of bytes needed to receive the last failure
-    int numBytes = DAQmxGetExtendedErrorInfo(NULL, 0); 
-    char *err = new char[numBytes];
-    DAQmxGetExtendedErrorInfo(err, numBytes);
-
-    std::cout << err << std::endl << "#############" << std::endl;
-    delete err;
-  }
-
-  }
-
-  catch(std::exception& e){
-    std::cout << e.what() << std::endl;
+    DAQmxGetExtendedErrorInfo(errBuff, ERRBUFF);
+    printf("DAQmx Error: %s\n", errBuff);
   }
 }
 
-void NIDAQmxEventHandler::tagHandler() { 
-  std::cout << "Event Handler: Tag" << std:: endl; 
+void NIDAQmxEventHandler::tagHandler() {
+  std::cout << "Event Handler: Tag" << std::endl;
 }
 
 void NIDAQmxEventHandler::endHandler() {
   std::cout << "Event Handler: Ending Session..." << std::endl;
-  stopFlag = true;
+  DAQmxStopTask(taskHandle);
+  DAQmxClearTask(taskHandle);
 }
 
 int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
@@ -78,33 +60,30 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle,
   int32 error = 0;
   char errBuff[2048] = {'\0'};
   static int totalRead = 0;
-  int32 read = 0;
+  int32 samplesRead = 0;
   float64 data[BUFFER_SIZE];
-
   std::string giantString;
-  for (size_t index = 0; index < BUFFER_SIZE; index++) {
-    giantString += std::to_string(data[index]) + " ";
-  }
-  std::cout << giantString << "\n\n\n";
 
   /*********************************************/
   // DAQmx Read Code
   /*********************************************/
   DAQmxErrChk(DAQmxReadAnalogF64(taskHandle, -1, 0, DAQmx_Val_GroupByChannel,
-                                 data, 320, &read, NULL));
-  if (read > 0) {
-    printf("Acquired %d samples. Total %d\r", (int)read,
-           (int)(totalRead += read));
+                                 data, BUFFER_SIZE, &samplesRead, NULL));
+  if (samplesRead > 0) {
+    printf("Acquired %d samples. Total %d\r", (int)samplesRead,
+           (int)(totalRead += samplesRead));
     fflush(stdout);
   }
-  if (stopFlag) {
-    DAQmxStopTask(taskHandle);
-    DAQmxClearTask(taskHandle);
+
+  for (size_t index = 0; index < BUFFER_SIZE; index++) {
+    giantString += std::to_string(data[index]) + " ";
   }
+  //std::cout << giantString << "\n\n\n";
 
 Error:
   if (DAQmxFailed(error)) {
-    DAQmxGetExtendedErrorInfo(errBuff, 2048);
+    // Get and print error information
+    DAQmxGetExtendedErrorInfo(errBuff, ERRBUFF);
 
     /*********************************************/
     // DAQmx Stop Code
