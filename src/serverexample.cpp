@@ -21,16 +21,15 @@ int main(int argc, char** argv) {
   eventHandler* handler;
   handler = &niHandler;
 
-  //socketServer server =
-  //    initializeMeterServer(readServerConfig(configFile), handler);
-  //server.listenForClient();
+  socketServer server =
+      initializeMeterServer(readServerConfig(configFile), handler);
+  server.listenForClient();
 
   //handlers are handled in a thread because they aren't synchronous.
   //If they weren't in a thread, the main function would end, causing a
   //'virtual method teminated error.
-  std::thread runHandler(handlerThread, handler);
-
-  runHandler.join();
+  //std::thread runHandler(handlerThread, handler);
+  //runHandler.join();
 
   return 0;
 }

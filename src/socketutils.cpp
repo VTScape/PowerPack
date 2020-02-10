@@ -27,7 +27,7 @@ socketServer::socketServer(int portNumber, eventHandler *handler) {
                  sizeof(opt))) {
     printError("Server failed to set socket options\n");
   }
-
+  
   // This binds the socket to the given address details.
   if (bind(sock, (sockaddr *)&address, sizeof(address)) < 0) {
     printError("Server failed to bind to socket\n");
@@ -37,10 +37,19 @@ socketServer::socketServer(int portNumber, eventHandler *handler) {
 socketServer::~socketServer() { close(sock); }
 
 void socketServer::readData(int socketFD, void *buf, size_t size) {
-  if (read(socketFD, buf, size) == -1) {
+  int* tmp = (int*)buf;
+  size_t to_read = size;
+  size_t numRead = 0;
+  do{
+    std::cout <<  to_read << std::endl;
+  if ( (numRead = read(socketFD, tmp, to_read) ) == -1) {
     printError(
         "Server failed to completely read from the socket with errorno: ");
   }
+  std::cout << numRead << std::endl;
+  to_read -= numRead;
+  tmp += numRead;
+  }while(to_read);
 }
 
 void socketServer::write(int socketFD, void *buf, size_t size) {
@@ -55,6 +64,7 @@ void socketServer::write(int socketFD, void *buf, size_t size) {
 void socketServer::listenForClient() {
   socklen_t clientLength;
   int readSocket;
+  int iMode = 1;
 
   if (listen(sock, 1) == -1) {
     printError("Server failed to listen on socket");
@@ -64,7 +74,7 @@ void socketServer::listenForClient() {
   if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1) {
     printError("Error, the accept failed with errno: ");
   }
-
+  ioctl(readSocket, FIONBIO, &iMode);
   // Once the connection has been accepted, keep reading until
   // handleClientConnection() gives an error.
   while (handleClientConnection(readSocket) == 0)

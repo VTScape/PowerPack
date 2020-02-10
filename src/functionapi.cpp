@@ -17,7 +17,7 @@ int readServerConfig(std::string configFilePath) {
     if (isSubString(tempString, "port")) {
       portNumber = extractConfigValue(tempString);
     } else {
-      std::cerr << "Unrecognized value in server config file\n";
+      std::cerr << "Unrecognized value in server config file\n" << tempString;
       exit(EXIT_FAILURE);
     }
   }

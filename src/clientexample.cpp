@@ -12,6 +12,7 @@ int clientThread(socketClient client) {
   int a;
   client.sendTag("About to add some numbers");
   a = 2 + 2;
+  sleep(1);
   client.sendTag("Done adding numbers");
   
   client.sendSessionEnd();
