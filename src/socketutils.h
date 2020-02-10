@@ -1,3 +1,6 @@
+#ifndef SOCKET_UTILS_H
+#define SOCKET_UTILS_H
+
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -97,3 +100,5 @@ class socketClient {
 // This function prints an error message, prints the last errorno, and exits the
 // program.
 void printError(std::string errorMsg);
+
+#endif

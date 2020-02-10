@@ -1,3 +1,6 @@
+#ifndef FUNCTION_API_H
+#define FUNCTION_API_H
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -22,3 +25,5 @@ std::pair<int, std::string> readClientConfig(std::string configFilePath);
 
 bool isSubString(std::string inputString, std::string subString);
 std::string extractConfigValue(std::string inputString);
+
+#endif

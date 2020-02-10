@@ -41,7 +41,7 @@ void socketServer::readData(int socketFD, void *buf, size_t size) {
   size_t to_read = size;
   size_t numRead = 0;
   do{
-    std::cout <<  to_read << std::endl;
+    std::cout <<  to_read << "from" << sock << std::endl;
   if ( (numRead = read(socketFD, tmp, to_read) ) == -1) {
     printError(
         "Server failed to completely read from the socket with errorno: ");
@@ -74,7 +74,6 @@ void socketServer::listenForClient() {
   if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1) {
     printError("Error, the accept failed with errno: ");
   }
-  ioctl(readSocket, FIONBIO, &iMode);
   // Once the connection has been accepted, keep reading until
   // handleClientConnection() gives an error.
   while (handleClientConnection(readSocket) == 0)
@@ -122,9 +121,7 @@ socketServer::handler->endHandler();
     std::cout << "Tag: " << timestamps[index].first << " happened "
               << timestamps[index].second - timestamps[0].second
               << " nanoseconds after the program start.\n";
-  }
-
-  
+  }  
 }
 
 void socketServer::handleTag(int socketFD) {
@@ -177,26 +174,29 @@ void socketClient::readData(void *buf, size_t size) {
 }
 
 void socketClient::write(void *buf, size_t size) {
-  size_t bytesSent;
-  if ((bytesSent = send(sock, buf, size, 0)) < size) {
+  int bytesSent;
+  std::cout << "**" << sock << "**" << std::endl;
+  if ((bytesSent = send(sock, buf, size, 0))  <= 0 ) {
     printError("Client failed to completely send on socket. Client sent " +
                std::to_string(bytesSent) + " bytes, but expected to send " +
-               std::to_string(size) + " bytes.");
+               std::to_string(size) + " bytes: ");
   }
 }
 
 void socketClient::sendSessionStart() {
+  std::cout << "Sending start to fd" << sock << std::endl;
   char startBuf[] = {SESSION_START};
   write(startBuf, sizeof(char));
 }
 
 void socketClient::sendSessionEnd() {
-  
+  std::cout << "Sending end to fd" << sock << std::endl;
   char endBuf[] = {SESSION_END};
   write(endBuf, sizeof(char));
 }
 
 void socketClient::sendTag(std::string tagName) {
+  std::cout << "Sending to fd" << sock << std::endl;
   char tagBuf[] = {SESSION_TAG};
   size_t tagSize[] = {tagName.size() + 1};
   write(tagBuf, sizeof(char));

@@ -2,7 +2,7 @@ SHELL = /bin/sh
 
 ###########NIDAQMAX STUFF
 CXX = g++
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++11 
 
 
 LIBS = nidaqmx
@@ -37,7 +37,7 @@ endif
 
 ###########
 
-OBJS = functionapi.o socketutils.o nidaqmxeventhandler.o timeutils.o eventhandler.o
+OBJS = timeutils.o eventhandler.o socketutils.o functionapi.o nidaqmxeventhandler.o 
 
 all: example
 
@@ -49,9 +49,9 @@ testsockets: testsockets.o $(OBJS)
 	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall testsockets.o $(OBJS) -o testsockets
 
 serverexample: serverexample.o $(OBJS)
-	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall serverexample.o $(OBJS) -o serverexample
+	$(CXX)  $(LDFLAGS) $(LIBFLAGS) -Wall -pthread serverexample.o $(OBJS) -o serverexample
 clientexample: clientexample.o $(OBJS)
-	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall clientexample.o $(OBJS) -o clientexample
+	$(CXX) $(LDFLAGS) $(LIBFLAGS) -Wall -pthread clientexample.o $(OBJS) -o clientexample
 
 clientexample.o: functionapi.h
 serverexample.o: functionapi.h nidaqmxeventhandler.h
