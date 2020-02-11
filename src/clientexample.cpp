@@ -1,7 +1,10 @@
 #include "functionapi.h"
 #include <thread>
 
-int clientThread(socketClient client) {
+int clientThread(std::string configFile) {
+
+  socketClient client = initializeFunctionClient(readClientConfig(configFile));
+
   client.sendSessionStart();
 
   client.sendTag("Hubba Hubba");
@@ -21,10 +24,8 @@ int clientThread(socketClient client) {
 
 int main(int argc, char** argv) {
   std::string configFile(argv[1]);
-  std::string testString = "About to print";
-  socketClient client = initializeFunctionClient(readClientConfig(configFile));
-  
-  std::thread runHandler(clientThread, client);
+
+  std::thread runHandler(clientThread, configFile);
   runHandler.join();
 }
 

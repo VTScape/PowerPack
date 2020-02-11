@@ -12,7 +12,7 @@ socketServer::socketServer(int portNumber, eventHandler *handler) {
   address.sin_family = AF_INET;
   // This allows any address connection.
   address.sin_addr.s_addr = INADDR_ANY;
-  // This resolves the given port number.I
+  // This resolves the given port number.
   address.sin_port = htons(portNumber);
   int opt = 1;
 
@@ -41,14 +41,12 @@ void socketServer::readData(int socketFD, void *buf, size_t size) {
   size_t to_read = size;
   size_t numRead = 0;
   do{
-    std::cout <<  to_read << "from" << sock << std::endl;
-  if ( (numRead = read(socketFD, tmp, to_read) ) == -1) {
-    printError(
-        "Server failed to completely read from the socket with errorno: ");
-  }
-  std::cout << numRead << std::endl;
-  to_read -= numRead;
-  tmp += numRead;
+    if ( (numRead = read(socketFD, tmp, to_read) ) == -1) {
+      printError(
+          "Server failed to completely read from the socket with errorno: ");
+    }
+    to_read -= numRead;
+    tmp += numRead;
   }while(to_read);
 }
 
@@ -66,12 +64,12 @@ void socketServer::listenForClient() {
   int readSocket;
   int iMode = 1;
 
-  if (listen(sock, 1) == -1) {
+  if (listen(sock, 2) == -1) {
     printError("Server failed to listen on socket");
   }
 
   clientLength = sizeof(address);
-  if ((readSocket = accept(sock, (sockaddr *)&address, &clientLength)) == -1) {
+  if ((readSocket = accept(sock, (sockaddr *)&address, (socklen_t*)&clientLength)) == -1) {
     printError("Error, the accept failed with errno: ");
   }
   // Once the connection has been accepted, keep reading until
@@ -161,7 +159,7 @@ socketClient::socketClient(int portNumber, std::string serverIP) {
 
   // This connects to the server.
   if (connect(sock, (sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
-    printError("Client connection failed with errorno: ");
+    printError("Client connection failed: ");
   }
 }
 
@@ -175,7 +173,7 @@ void socketClient::readData(void *buf, size_t size) {
 
 void socketClient::write(void *buf, size_t size) {
   int bytesSent;
-  std::cout << "**" << sock << "**" << std::endl;
+
   if ((bytesSent = send(sock, buf, size, 0))  <= 0 ) {
     printError("Client failed to completely send on socket. Client sent " +
                std::to_string(bytesSent) + " bytes, but expected to send " +
